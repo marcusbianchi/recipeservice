@@ -10,6 +10,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using recipeservice.Services.Interfaces;
 using recipeservice.Services;
+using recipeservice.Data;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace recipeservice
 {
@@ -26,8 +29,16 @@ namespace recipeservice
         {
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSingleton<IThingService, ThingService>();
+            services.AddSingleton<IProductService, ProductService>();
             services.AddSingleton<IThingGroupService, ThingGroupService>();
-            services.AddMvc();
+            services.AddSingleton<IParametersService, ParameterService>();
+            services.AddDbContext<ApplicationDbContext>(options =>
+               options.UseNpgsql(Configuration.GetConnectionString("RecipeDb")));
+            services.AddTransient<IPhaseService, PhaseService>();
+            services.AddMvc().AddJsonOptions(options =>
+                {
+                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

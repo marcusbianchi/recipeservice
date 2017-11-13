@@ -72,7 +72,7 @@ namespace recipeservice.Services
             if (startat != 0)
                 query["startat"] = startat.ToString();
             if (quantity != 0)
-                query["quantity"] = "quantity";
+                query["quantity"] = quantity.ToString();
             builder.Query = query.ToString();
             string url = builder.ToString();
             var result = await client.GetAsync(url);

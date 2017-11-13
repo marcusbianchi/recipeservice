@@ -8,5 +8,6 @@ namespace recipeservice.Services.Interfaces
     public interface IThingService
     {
         Task<(Thing, HttpStatusCode)> getThing(int thingId);
+        Task<(List<Thing>, HttpStatusCode)> getThingList(int[] thingId);
     }
 }

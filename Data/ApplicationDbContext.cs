@@ -1,0 +1,22 @@
+using Microsoft.EntityFrameworkCore;
+using recipeservice.Model;
+
+namespace recipeservice.Data
+{
+    public class ApplicationDbContext : DbContext
+    {
+
+        public DbSet<Phase> Phases { get; set; }
+        public DbSet<PhaseParameter> PhaseParameters { get; set; }
+        public DbSet<PhaseProduct> PhaseProducts { get; set; }
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        {
+
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+
+
+        }
+    }
+}

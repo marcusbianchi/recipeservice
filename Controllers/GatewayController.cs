@@ -21,11 +21,14 @@ namespace recipeservice.Controllers
         private IConfiguration _configuration;
         private IThingService _thingService;
         private IThingGroupService _thingGroupService;
-        public GatewayController(IConfiguration configuration, IThingService thingService, IThingGroupService thingGroupService)
+        private IProductService _productService;
+        public GatewayController(IConfiguration configuration,
+         IThingService thingService, IThingGroupService thingGroupService, IProductService productService)
         {
             _configuration = configuration;
             _thingService = thingService;
             _thingGroupService = thingGroupService;
+            _productService = productService;
         }
 
         [HttpGet("gateway/thinggroups/")]

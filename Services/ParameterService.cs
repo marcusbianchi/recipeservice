@@ -12,59 +12,59 @@ using recipeservice.Services.Interfaces;
 
 namespace recipeservice.Services
 {
-    public class ThingService : IThingService
+    public class ParameterService : IParametersService
     {
         private IConfiguration _configuration;
         private HttpClient client = new HttpClient();
-        public ThingService(IConfiguration configuration)
+        public ParameterService(IConfiguration configuration)
         {
             _configuration = configuration;
         }
-        public async Task<(Thing, HttpStatusCode)> getThing(int thingId)
+        public async Task<(Parameter, HttpStatusCode)> getParameter(int thingId)
         {
-            Thing returnThing = null;
+            Parameter returnParameter = null;
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            var builder = new UriBuilder(_configuration["thingServiceEndpoint"] + "/api/things/" + thingId);
+            var builder = new UriBuilder(_configuration["thingServiceEndpoint"] + "/api/parameters/" + thingId);
             string url = builder.ToString();
             var result = await client.GetAsync(url);
             switch (result.StatusCode)
             {
                 case HttpStatusCode.OK:
-                    returnThing = JsonConvert.DeserializeObject<Thing>(await client.GetStringAsync(url));
-                    return (returnThing, HttpStatusCode.OK);
+                    returnParameter = JsonConvert.DeserializeObject<Parameter>(await client.GetStringAsync(url));
+                    return (returnParameter, HttpStatusCode.OK);
                 case HttpStatusCode.NotFound:
-                    return (returnThing, HttpStatusCode.NotFound);
+                    return (returnParameter, HttpStatusCode.NotFound);
                 case HttpStatusCode.InternalServerError:
-                    return (returnThing, HttpStatusCode.InternalServerError);
+                    return (returnParameter, HttpStatusCode.InternalServerError);
             }
-            return (returnThing, HttpStatusCode.NotFound);
+            return (returnParameter, HttpStatusCode.NotFound);
 
         }
 
-        public async Task<(List<Thing>, HttpStatusCode)> getThingList(int[] thingIds)
+        public async Task<(List<Parameter>, HttpStatusCode)> getParameterList(int[] parameterids)
         {
-            List<Thing> listThings = null;
+            List<Parameter> listParameters = null;
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            var builder = new UriBuilder(_configuration["thingServiceEndpoint"] + "/api/things/list?");
+            var builder = new UriBuilder(_configuration["thingServiceEndpoint"] + "/api/parameters/list?");
             string url = builder.ToString();
-            foreach (var item in thingIds)
+            foreach (var item in parameterids)
             {
-                url += $"thingid={item}&";
+                url += $"parameterid={item}&";
             }
             var result = await client.GetAsync(url);
             switch (result.StatusCode)
             {
                 case HttpStatusCode.OK:
-                    listThings = JsonConvert.DeserializeObject<List<Thing>>(await client.GetStringAsync(url));
-                    return (listThings, HttpStatusCode.OK);
+                    listParameters = JsonConvert.DeserializeObject<List<Parameter>>(await client.GetStringAsync(url));
+                    return (listParameters, HttpStatusCode.OK);
                 case HttpStatusCode.NotFound:
-                    return (listThings, HttpStatusCode.NotFound);
+                    return (listParameters, HttpStatusCode.NotFound);
                 case HttpStatusCode.InternalServerError:
-                    return (listThings, HttpStatusCode.InternalServerError);
+                    return (listParameters, HttpStatusCode.InternalServerError);
             }
-            return (listThings, HttpStatusCode.NotFound);
+            return (listParameters, HttpStatusCode.NotFound);
         }
     }
 }
