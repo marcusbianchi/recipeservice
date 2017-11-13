@@ -93,14 +93,20 @@ These are the fields of the phase and it's constrains:
   - String (Up to 50 chars)
   - Mandatory
 - inputProducts: Array of the Input Products.
-  - Product Object
+  - List of Product Objects
   - Ignored on Create, mandatory on the other methods
 - outputProducts: Array of the Output Products.
-  - Product Object
+  - List of Product Objects
   - Ignored on Create, mandatory on the other methods
 - phaseParameters: Parameters of the phase.
-  - Parameter Object
-  - Ignored on Create, mandatory on the other methods
+  -List of Parameter Objects
+  - Ignored on Create, mandatory on the other methods,
+- predecessorPhaseId: Id of the previous phase
+  - Integer
+  - Optional
+- sucessorPhasesIds: Id of the phases to be called.
+  - Array Integer
+  - Optional
 
 ### JSON Example:
 ```json
@@ -110,6 +116,39 @@ These are the fields of the phase and it's constrains:
   "phaseCode": "xpto",
   "inputProducts": [],
   "outputProducts": [],
-  "phaseParameters": []
+  "phaseParameters": [],
+  "predecessorPhaseId": 0,
+  "sucessorPhasesId": [3,2],
 }
 ```
+## URLs
+- api/phases/{optional=startat}{optional=quantity}
+  - Get: Return List of Phaes
+    - startat: represent where the list starts t the database (Default=0)
+    - quantity: number of resuls in the query (Default=50)
+  - Post: Create the Phase with the JSON in the body
+    - Body: Phase JSON
+
+- api/phases/{id}
+  - Get: Return Phase with phaseId = ID
+  - Put: Update the Phase with the JSON in the body with phaseId = ID
+    - Body: Phase JSON
+  - Delete: Delete the phase from the Database with phaseId = ID
+
+- api/phases/products/output/{phaseid}
+  - Get: Return All the Output Products with phaseId = phaseId
+  - Post: Add the Product as an output product on phaseId
+      - Body: Product JSON
+  - Delete: Delete the product from the output product list
+
+- api/phases/products/input/{phaseid}
+  - Get: Return All the input Products with phaseId = phaseId
+  - Post: Add the Product as an input product on phaseId
+    - Body: Product JSON
+  - Delete: Delete the product from the input product list
+
+- api/phases/parameters/input/{phaseid}
+  - Get: Return All the parameters with phaseId = phaseId
+  - Post: Add the parameters parameter on phaseId = phaseId
+    - Body: Product JSON
+  - Delete: Delete the parameter from the parameter list

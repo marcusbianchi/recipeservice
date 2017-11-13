@@ -232,6 +232,7 @@ namespace recipeservice.Services
             phase.inputProducts = new List<PhaseProduct>();
             phase.outputProducts = new List<PhaseProduct>();
             phase.phaseParameters = new List<PhaseParameter>();
+            phase.sucessorPhasesIds = new int[0];
             await _context.AddAsync(phase);
             await _context.SaveChangesAsync();
             return phase;

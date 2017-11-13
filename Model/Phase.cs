@@ -11,6 +11,8 @@ namespace recipeservice.Model
         public string phaseName { get; set; }
         [MaxLength(100)]
         public string phaseCode { get; set; }
+        public int predecessorPhaseId { get; set; }
+        public int[] sucessorPhasesIds { get; set; }
         public ICollection<PhaseProduct> inputProducts { get; set; }
         public ICollection<PhaseProduct> outputProducts { get; set; }
         public ICollection<PhaseParameter> phaseParameters { get; set; }
