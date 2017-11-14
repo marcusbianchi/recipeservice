@@ -22,13 +22,20 @@ namespace recipeservice.Controllers
         private IThingService _thingService;
         private IThingGroupService _thingGroupService;
         private IProductService _productService;
+        private IParametersService _parametersService;
+
         public GatewayController(IConfiguration configuration,
-         IThingService thingService, IThingGroupService thingGroupService, IProductService productService)
+         IThingService thingService,
+         IThingGroupService thingGroupService,
+         IProductService productService,
+         IParametersService parametersService
+         )
         {
             _configuration = configuration;
             _thingService = thingService;
             _thingGroupService = thingGroupService;
             _productService = productService;
+            _parametersService = parametersService;
         }
 
         [HttpGet("gateway/thinggroups/")]
@@ -86,6 +93,36 @@ namespace recipeservice.Controllers
             {
                 case HttpStatusCode.OK:
                     return Ok(thing);
+                case HttpStatusCode.NotFound:
+                    return NotFound();
+            }
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+        [HttpGet("gateway/parameters/{id}")]
+        [Produces("application/json")]
+        public async Task<IActionResult> GetParameter(int id)
+        {
+            var (thing, resultCode) = await _parametersService.getParameter(id);
+            switch (resultCode)
+            {
+                case HttpStatusCode.OK:
+                    return Ok(thing);
+                case HttpStatusCode.NotFound:
+                    return NotFound();
+            }
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+        [HttpGet("gateway/parameters/")]
+        [Produces("application/json")]
+        public async Task<IActionResult> GetParameters([FromQuery]int startat, [FromQuery]int quantity)
+        {
+
+            var (parameters, resultCode) = await _parametersService.getParameters(startat, quantity);
+            switch (resultCode)
+            {
+                case HttpStatusCode.OK:
+                    return Ok(parameters);
                 case HttpStatusCode.NotFound:
                     return NotFound();
             }
