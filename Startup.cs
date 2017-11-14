@@ -13,6 +13,7 @@ using recipeservice.Services;
 using recipeservice.Data;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc;
 
 namespace recipeservice
 {
@@ -35,7 +36,16 @@ namespace recipeservice
             services.AddDbContext<ApplicationDbContext>(options =>
                options.UseNpgsql(Configuration.GetConnectionString("RecipeDb")));
             services.AddTransient<IPhaseService, PhaseService>();
-            services.AddMvc().AddJsonOptions(options =>
+            services.AddTransient<IPhaseParameterService, PhaseParameterService>();
+            services.AddTransient<IPhaseProductService, PhaseProductService>();
+            services.AddMvc((options) =>
+            {
+                options.CacheProfiles.Add("recipecache", new CacheProfile()
+                {
+                    Duration = Convert.ToInt32(Configuration["CacheDuration"]),
+                    Location = ResponseCacheLocation.Any
+                });
+            }).AddJsonOptions(options =>
                 {
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 });

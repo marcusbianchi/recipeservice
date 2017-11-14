@@ -18,16 +18,16 @@ namespace recipeservice.Controllers
     [Route("api/phases/parameters/")]
     public class PhaseParametersController : Controller
     {
-        private readonly IPhaseService _phaseService;
-        public PhaseParametersController(IPhaseService phaseService)
+        private readonly IPhaseParameterService _phaseParameterService;
+        public PhaseParametersController(IPhaseParameterService phaseParameterService)
         {
-            _phaseService = phaseService;
+            _phaseParameterService = phaseParameterService;
         }
 
         [HttpGet("{phaseId}")]
         public async Task<IActionResult> Get(int phaseId)
         {
-            return Ok(await _phaseService.getParameterFromPhase(phaseId));
+            return Ok(await _phaseParameterService.getParameterFromPhase(phaseId));
         }
 
         [HttpPost("{phaseId}")]
@@ -36,9 +36,9 @@ namespace recipeservice.Controllers
             phaseParameter.phaseParameterId = 0;
             if (ModelState.IsValid)
             {
-                var phase = await _phaseService.addParameterToPhase(phaseParameter, phaseId);
+                var phase = await _phaseParameterService.addParameterToPhase(phaseParameter, phaseId);
                 if (phase != null)
-                    return Created($"api/phases/{phase.phaseId}", phase);
+                    return Ok(phase);
                 return NotFound();
             }
             return BadRequest(ModelState);
@@ -50,7 +50,7 @@ namespace recipeservice.Controllers
             Phase phase = null;
             if (ModelState.IsValid)
             {
-                phase = await _phaseService.removeParameterFromPhase(phaseParameter.phaseParameterId, phaseId);
+                phase = await _phaseParameterService.removeParameterFromPhase(phaseParameter.phaseParameterId, phaseId);
                 if (phase != null)
                     return Ok(phase);
                 return NotFound();

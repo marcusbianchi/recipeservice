@@ -25,6 +25,7 @@ namespace recipeservice.Controllers
         }
 
         [HttpGet]
+        [ResponseCache(CacheProfileName = "recipecache")]
         public async Task<IActionResult> Get([FromQuery]int startat, [FromQuery]int quantity)
         {
             if (quantity == 0)
@@ -34,6 +35,7 @@ namespace recipeservice.Controllers
         }
 
         [HttpGet("{id}")]
+        [ResponseCache(CacheProfileName = "recipecache")]
         public async Task<IActionResult> Get(int id)
         {
             var phase = await _phaseService.getPhase(id);

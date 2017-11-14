@@ -18,16 +18,15 @@ namespace recipeservice.Controllers
     [Route("api/phases/products/output")]
     public class PhaseOutputProductscController : Controller
     {
-        private readonly IPhaseService _phaseService;
-        public PhaseOutputProductscController(IPhaseService phaseService)
+        private readonly IPhaseProductService _phaseProductService;
+        public PhaseOutputProductscController(IPhaseProductService phaseProductService)
         {
-            _phaseService = phaseService;
+            _phaseProductService = phaseProductService;
         }
-
         [HttpGet("{phaseId}")]
         public async Task<IActionResult> Get(int phaseId)
         {
-            return Ok(await _phaseService.getOutputProductsFromPhase(phaseId));
+            return Ok(await _phaseProductService.getOutputProductsFromPhase(phaseId));
         }
 
 
@@ -37,7 +36,7 @@ namespace recipeservice.Controllers
             PhaseProduct.phaseProductId = 0;
             if (ModelState.IsValid)
             {
-                var phase = await _phaseService.addOutputProductToPhase(PhaseProduct, phaseId);
+                var phase = await _phaseProductService.addOutputProductToPhase(PhaseProduct, phaseId);
                 if (phase != null)
                     return Ok(phase);
                 return NotFound();
@@ -51,7 +50,7 @@ namespace recipeservice.Controllers
             Phase phase = null;
             if (ModelState.IsValid)
             {
-                phase = await _phaseService.removeProductFromPhase(PhaseProduct.phaseProductId, phaseId);
+                phase = await _phaseProductService.removeProductFromPhase(PhaseProduct.phaseProductId, phaseId);
                 if (phase != null)
                     return Ok(phase);
                 return NotFound();
