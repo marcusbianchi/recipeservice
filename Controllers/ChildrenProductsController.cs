@@ -29,33 +29,5 @@ namespace recipeservice.Controllers
                 return NotFound();
             return Ok(products);
         }
-
-        [HttpPost("{parentId}")]
-        public async Task<IActionResult> Post(int parentId, [FromBody]Product product)
-        {
-            if (ModelState.IsValid)
-            {
-                var outproduct = await _productService.addChildrenProducts(parentId, product);
-                if (outproduct == null)
-                    return NotFound();
-                return Ok(outproduct);
-            }
-            return BadRequest(ModelState);
-
-        }
-
-        [HttpDelete("{parentId}")]
-        public async Task<IActionResult> Delete(int parentId, [FromBody]Product product)
-        {
-            if (ModelState.IsValid)
-            {
-                var outproduct = await _productService.removeChildrenProducts(parentId, product);
-                if (outproduct == null)
-                    return NotFound();
-                return Ok(outproduct);
-            }
-            return BadRequest(ModelState);
-
-        }
     }
 }
