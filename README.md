@@ -363,12 +363,12 @@ These are the fields of the thing and it's constrains:
 ```
 
 ## URLs
-- api/products/
+- api/extraattributetypes/
   - Get: Return List of Extra Attibute Types   
   - Post: Create the Extra Attibute Types with the JSON in the body
     - Body: Extra Attibute Types JSON
 
-- api/products/{id}
+- api/extraattributetypes/{id}
   - Get: Return Extra Attibute Types with extraAttibruteTypeId = ID
   - Put: Update the Extra Attibute Types with the JSON in the body with extraAttibruteTypeId = ID
     - Body: Extra Attibute Types JSON

@@ -11,11 +11,11 @@ using recipeservice.Services.Interfaces;
 namespace recipeservice.Controllers
 {
     [Route("api/[controller]")]
-    public class ExtraAttibuteTypesController : Controller
+    public class ExtraAttributeTypesController : Controller
     {
         private readonly IExtraAttributeTypeService _extraAttributeTypeService;
 
-        public ExtraAttibuteTypesController(IExtraAttributeTypeService extraAttributeTypeService)
+        public ExtraAttributeTypesController(IExtraAttributeTypeService extraAttributeTypeService)
         {
             _extraAttributeTypeService = extraAttributeTypeService;
         }
