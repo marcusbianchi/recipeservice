@@ -345,7 +345,7 @@ These are the fields of the thing and it's constrains:
 # ExtraAttibuteTypesAPI
 API to Manage Extra Attibute Types that can be added on Lorien's products. Used to create, update, read and delete Extra Attibute Types.
 
-## Product Data Format
+## Extra Attibute Type Data Format
 These are the fields of the thing and it's constrains:
 - extraAttibruteTypeId: Id of the Extra Attibute Types given by de Database.
   - Integer
