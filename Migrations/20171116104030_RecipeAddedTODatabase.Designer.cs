@@ -11,9 +11,10 @@ using System;
 namespace recipeservice.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171116104030_RecipeAddedTODatabase")]
+    partial class RecipeAddedTODatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,9 +35,13 @@ namespace recipeservice.Migrations
 
                     b.Property<int>("predecessorPhaseId");
 
+                    b.Property<int?>("recipeId");
+
                     b.Property<int[]>("sucessorPhasesIds");
 
                     b.HasKey("phaseId");
+
+                    b.HasIndex("recipeId");
 
                     b.ToTable("Phases");
                 });
@@ -104,8 +109,6 @@ namespace recipeservice.Migrations
                     b.Property<int>("recipeId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int[]>("phasesId");
-
                     b.Property<string>("recipeCode")
                         .HasMaxLength(50);
 
@@ -119,6 +122,13 @@ namespace recipeservice.Migrations
                     b.HasIndex("recipeProductphaseProductId");
 
                     b.ToTable("Recipes");
+                });
+
+            modelBuilder.Entity("recipeservice.Model.Phase", b =>
+                {
+                    b.HasOne("recipeservice.Model.Recipe")
+                        .WithMany("phases")
+                        .HasForeignKey("recipeId");
                 });
 
             modelBuilder.Entity("recipeservice.Model.PhaseParameter", b =>

@@ -44,7 +44,7 @@ namespace recipeservice.Services
         public async Task<PhaseParameter> addParameterToPhase(PhaseParameter phaseParameter, int phaseId)
         {
             var curPhase = await _phaseService.getPhase(phaseId);
-            if (curPhase.outputProducts != null)
+            if (curPhase.phaseParameters != null)
             {
                 if (curPhase != null && !curPhase.phaseParameters
                 .Select(x => x.parameterId).ToList().Contains(phaseParameter.parameterId))

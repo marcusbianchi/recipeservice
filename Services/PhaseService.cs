@@ -109,14 +109,16 @@ namespace recipeservice.Services
                .Where(x => x.phaseId == phaseId)
                .FirstOrDefaultAsync();
 
+
+            if (phaseId != phase.phaseId && curPhase == null)
+            {
+                return null;
+            }
+
             phase.inputProducts = curPhase.inputProducts;
             phase.outputProducts = curPhase.outputProducts;
             phase.phaseParameters = phase.phaseParameters;
 
-            if (phaseId != phase.phaseId)
-            {
-                return null;
-            }
             _context.Phases.Update(phase);
             await _context.SaveChangesAsync();
             return curPhase;

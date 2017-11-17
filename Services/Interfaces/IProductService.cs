@@ -9,7 +9,7 @@ namespace recipeservice.Services.Interfaces
     {
         Task<(Product, HttpStatusCode)> getProduct(int productId);
         Task<(List<Product>, HttpStatusCode)> getProducts(int startat, int quantity);
-        Task<(List<Product>, HttpStatusCode)> GetChildrenProducts(int groupId);
+        Task<(List<Product>, HttpStatusCode)> GetChildrenProducts(int productId);
         Task<(List<Product>, HttpStatusCode)> getProductList(int[] prolductIds);
 
     }

@@ -128,5 +128,53 @@ namespace recipeservice.Controllers
             }
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
+
+        [HttpGet("gateway/products/")]
+        [Produces("application/json")]
+        public async Task<IActionResult> getProducts([FromQuery]int startat, [FromQuery]int quantity)
+        {
+
+            var (products, resultCode) = await _productService.getProducts(startat, quantity);
+            switch (resultCode)
+            {
+                case HttpStatusCode.OK:
+                    return Ok(products);
+                case HttpStatusCode.NotFound:
+                    return NotFound();
+            }
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+        [HttpGet("gateway/products/{id}")]
+        [Produces("application/json")]
+        public async Task<IActionResult> GetProduct(int id)
+        {
+            var (product, resultCode) = await _productService.getProduct(id);
+            switch (resultCode)
+            {
+                case HttpStatusCode.OK:
+                    return Ok(product);
+                case HttpStatusCode.NotFound:
+                    return NotFound();
+            }
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+        [HttpGet("gateway/products/childrenproducts/{productid}")]
+        [Produces("application/json")]
+        public async Task<IActionResult> getChildrenProducts(int productid)
+        {
+            var (products, resultCode) = await _productService.GetChildrenProducts(productid);
+            switch (resultCode)
+            {
+                case HttpStatusCode.OK:
+                    return Ok(products);
+                case HttpStatusCode.NotFound:
+                    return NotFound();
+            }
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+
     }
 }

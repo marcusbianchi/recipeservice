@@ -38,6 +38,8 @@ namespace recipeservice
             services.AddTransient<IPhaseService, PhaseService>();
             services.AddTransient<IPhaseParameterService, PhaseParameterService>();
             services.AddTransient<IPhaseProductService, PhaseProductService>();
+            services.AddTransient<IRecipeService, RecipeService>();
+            services.AddTransient<IRecipePhaseService, RecipePhaseService>();
             services.AddMvc((options) =>
             {
                 options.CacheProfiles.Add("recipecache", new CacheProfile()
@@ -47,7 +49,7 @@ namespace recipeservice
                 });
             }).AddJsonOptions(options =>
                 {
-                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                    // options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 });
         }
 

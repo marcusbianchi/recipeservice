@@ -6,6 +6,7 @@ namespace recipeservice.Data
     public class ApplicationDbContext : DbContext
     {
 
+        public DbSet<Recipe> Recipes { get; set; }
         public DbSet<Phase> Phases { get; set; }
         public DbSet<PhaseParameter> PhaseParameters { get; set; }
         public DbSet<PhaseProduct> PhaseProducts { get; set; }
