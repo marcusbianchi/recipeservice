@@ -10,6 +10,10 @@ namespace recipeservice.Data
         public DbSet<Phase> Phases { get; set; }
         public DbSet<PhaseParameter> PhaseParameters { get; set; }
         public DbSet<PhaseProduct> PhaseProducts { get; set; }
+        public DbSet<Product> Products { get; set; }
+
+        public DbSet<AdditionalInformation> AdditionalInformations { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
 

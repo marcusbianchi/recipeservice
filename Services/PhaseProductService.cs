@@ -108,38 +108,33 @@ namespace recipeservice.Services
                 phaseProducts = phase.outputProducts.ToList();
             }
 
-            var (products, statusProduct) = await _productService.getProductList(phaseProducts.Select(x => x.productId).ToArray());
+            var products = await _productService.getProductList(phaseProducts.Select(x => x.productId).ToArray());
             if (products.Count > 0)
             {
-                if (statusProduct == HttpStatusCode.OK)
-                {
-                    phaseProducts.ToList()
-                     .ForEach(x => x.product = products
-                     .Where(y => y.productId == x.productId).FirstOrDefault());
-                }
-
+                phaseProducts.ToList()
+                 .ForEach(x => x.product = products
+                 .Where(y => y.productId == x.productId).FirstOrDefault());
             }
             return phaseProducts;
         }
         private async Task<PhaseProduct> AddProduct(PhaseProduct phaseProduct, Phase currentPhase, ListType type)
         {
-            var (product, code) = await _productService.getProduct(phaseProduct.productId);
-            if (code == HttpStatusCode.OK)
+            var product = await _productService.getProduct(phaseProduct.productId);
+
+            if (type == ListType.input)
             {
-                if (type == ListType.input)
-                {
-                    if (currentPhase.inputProducts == null)
-                        currentPhase.inputProducts = new List<PhaseProduct>();
-                    currentPhase.inputProducts.Add(phaseProduct);
-                }
-                else if (type == ListType.output)
-                {
-                    if (currentPhase.outputProducts == null)
-                        currentPhase.outputProducts = new List<PhaseProduct>();
-                    currentPhase.outputProducts.Add(phaseProduct);
-                }
-                await _context.SaveChangesAsync();
+                if (currentPhase.inputProducts == null)
+                    currentPhase.inputProducts = new List<PhaseProduct>();
+                currentPhase.inputProducts.Add(phaseProduct);
             }
+            else if (type == ListType.output)
+            {
+                if (currentPhase.outputProducts == null)
+                    currentPhase.outputProducts = new List<PhaseProduct>();
+                currentPhase.outputProducts.Add(phaseProduct);
+            }
+            await _context.SaveChangesAsync();
+
             return phaseProduct;
         }
 

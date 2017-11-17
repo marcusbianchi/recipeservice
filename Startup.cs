@@ -30,11 +30,11 @@ namespace recipeservice
         {
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSingleton<IThingService, ThingService>();
-            services.AddSingleton<IProductService, ProductService>();
             services.AddSingleton<IThingGroupService, ThingGroupService>();
             services.AddSingleton<IParametersService, ParameterService>();
             services.AddDbContext<ApplicationDbContext>(options =>
                options.UseNpgsql(Configuration.GetConnectionString("RecipeDb")));
+            services.AddTransient<IProductService, ProductService>();
             services.AddTransient<IPhaseService, PhaseService>();
             services.AddTransient<IPhaseParameterService, PhaseParameterService>();
             services.AddTransient<IPhaseProductService, PhaseProductService>();

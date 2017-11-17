@@ -62,19 +62,17 @@ namespace recipeservice.Services
                 }
                 if (productsId.Count > 0)
                 {
-                    var (products, statusProduct) = await _productService.getProductList(productsId.ToArray());
+                    var products = await _productService.getProductList(productsId.ToArray());
                     if (productsId.Count > 0)
                     {
-                        if (statusProduct == HttpStatusCode.OK)
-                        {
-                            phase.inputProducts.ToList()
-                             .ForEach(x => x.product = products
-                             .Where(y => y.productId == x.productId).FirstOrDefault());
 
-                            phase.outputProducts.ToList()
-                            .ForEach(x => x.product = products
-                            .Where(y => y.productId == x.productId).FirstOrDefault());
-                        }
+                        phase.inputProducts.ToList()
+                         .ForEach(x => x.product = products
+                         .Where(y => y.productId == x.productId).FirstOrDefault());
+
+                        phase.outputProducts.ToList()
+                        .ForEach(x => x.product = products
+                        .Where(y => y.productId == x.productId).FirstOrDefault());
                     }
                 }
             }

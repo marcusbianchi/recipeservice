@@ -54,13 +54,10 @@ namespace recipeservice.Services
             {
                 if (recipe.recipeProduct != null)
                 {
-                    var (product, statusProduct) = await _productService.getProduct(recipe.recipeProduct.productId);
+                    var product = await _productService.getProduct(recipe.recipeProduct.productId);
                     if (product != null)
                     {
-                        if (statusProduct == HttpStatusCode.OK)
-                        {
-                            recipe.recipeProduct.product = product;
-                        }
+                        recipe.recipeProduct.product = product;
                     }
                 }
             }
@@ -125,11 +122,8 @@ namespace recipeservice.Services
             {
                 return null;
             }
-            var (product, code) = await _productService.getProduct(phaseProduct.productId);
-            if (code == HttpStatusCode.OK)
-            {
-                curRecipe.recipeProduct = phaseProduct;
-            }
+            var product = await _productService.getProduct(phaseProduct.productId);
+            curRecipe.recipeProduct = phaseProduct;
             _context.Recipes.Update(curRecipe);
             await _context.SaveChangesAsync();
             return phaseProduct;

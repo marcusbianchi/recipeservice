@@ -5,8 +5,11 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using recipeservice.Data;
 using recipeservice.Model;
 using recipeservice.Services.Interfaces;
 
@@ -14,107 +17,162 @@ namespace recipeservice.Services
 {
     public class ProductService : IProductService
     {
-
         private IConfiguration _configuration;
+        private readonly ApplicationDbContext _context;
         private HttpClient client = new HttpClient();
-        public ProductService(IConfiguration configuration)
+        public ProductService(IConfiguration configuration, ApplicationDbContext context)
         {
             _configuration = configuration;
+            _context = context;
         }
 
-        public async Task<(List<Product>, HttpStatusCode)> GetChildrenProducts(int productId)
+        public async Task<Product> getProduct(int ProductId)
         {
-            List<Product> returnProducts = null;
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            var builder = new UriBuilder(_configuration["productServiceEndpoint"] + "/api/products/childrenproducts/" + productId);
-            string url = builder.ToString();
-            var result = await client.GetAsync(url);
-            switch (result.StatusCode)
-            {
-                case HttpStatusCode.OK:
-                    returnProducts = JsonConvert.DeserializeObject<List<Product>>(await client.GetStringAsync(url));
-                    return (returnProducts, HttpStatusCode.OK);
-                case HttpStatusCode.NotFound:
-                    return (returnProducts, HttpStatusCode.NotFound);
-                case HttpStatusCode.InternalServerError:
-                    return (returnProducts, HttpStatusCode.InternalServerError);
-            }
-            return (returnProducts, HttpStatusCode.NotFound);
+            var product = await _context.Products
+             .Include(x => x.additionalInformation)
+             .OrderBy(x => x.productId)
+             .Where(x => x.productId == ProductId)
+             .FirstOrDefaultAsync();
+            if (product == null)
+                return null;
+            return product;
         }
 
-        public async Task<(Product, HttpStatusCode)> getProduct(int ProductId)
+        public async Task<List<Product>> getProductList(int[] productIds)
         {
-            Product returnProduct = null;
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            var builder = new UriBuilder(_configuration["productServiceEndpoint"] + "/api/products/" + ProductId);
-            string url = builder.ToString();
-            var result = await client.GetAsync(url);
-            switch (result.StatusCode)
-            {
-                case HttpStatusCode.OK:
-                    returnProduct = JsonConvert.DeserializeObject<Product>(await client.GetStringAsync(url));
-                    return (returnProduct, HttpStatusCode.OK);
-                case HttpStatusCode.NotFound:
-                    return (returnProduct, HttpStatusCode.NotFound);
-                case HttpStatusCode.InternalServerError:
-                    return (returnProduct, HttpStatusCode.InternalServerError);
-            }
-            return (returnProduct, HttpStatusCode.NotFound);
-
+            var products = await _context.Products
+             .Include(x => x.additionalInformation)
+             .Where(x => productIds.Contains(x.productId))
+             .ToListAsync();
+            return products;
         }
 
-        public async Task<(List<Product>, HttpStatusCode)> getProductList(int[] prolductIds)
+        public async Task<List<Product>> getProducts(int startat, int quantity)
         {
-            List<Product> listProducts = null;
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            var builder = new UriBuilder(_configuration["productServiceEndpoint"] + "/api/products/list?");
-            string url = builder.ToString();
-            foreach (var item in prolductIds)
-            {
-                url += $"productid={item}&";
-            }
-            var result = await client.GetAsync(url);
-            switch (result.StatusCode)
-            {
-                case HttpStatusCode.OK:
-                    listProducts = JsonConvert.DeserializeObject<List<Product>>(await client.GetStringAsync(url));
-                    return (listProducts, HttpStatusCode.OK);
-                case HttpStatusCode.NotFound:
-                    return (listProducts, HttpStatusCode.NotFound);
-                case HttpStatusCode.InternalServerError:
-                    return (listProducts, HttpStatusCode.InternalServerError);
-            }
-            return (listProducts, HttpStatusCode.NotFound);
+            if (quantity == 0)
+                quantity = 50;
+            var products = await _context.Products
+                      .Include(x => x.additionalInformation)
+                      .Where(x => x.enabled == true)
+                      .OrderBy(x => x.productId)
+                      .Skip(startat)
+                      .Take(quantity)
+                      .ToListAsync();
+            return products;
         }
 
-        public async Task<(List<Product>, HttpStatusCode)> getProducts(int startat, int quantity)
+        public async Task<List<Product>> GetChildrenProducts(int productId)
         {
-            List<Product> returnProducts = null;
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            var builder = new UriBuilder(_configuration["productServiceEndpoint"] + "/api/products");
-            var query = HttpUtility.ParseQueryString(builder.Query);
-            if (startat != 0)
-                query["startat"] = startat.ToString();
-            if (quantity != 0)
-                query["quantity"] = quantity.ToString();
-            builder.Query = query.ToString();
-            string url = builder.ToString();
-            var result = await client.GetAsync(url);
-            switch (result.StatusCode)
+            var parentThing = await _context.Products
+           .Where(x => x.productId == productId).FirstOrDefaultAsync();
+
+            if (parentThing != null)
             {
-                case HttpStatusCode.OK:
-                    returnProducts = JsonConvert.DeserializeObject<List<Product>>(await client.GetStringAsync(url));
-                    return (returnProducts, HttpStatusCode.OK);
-                case HttpStatusCode.NotFound:
-                    return (returnProducts, HttpStatusCode.NotFound);
-                case HttpStatusCode.InternalServerError:
-                    return (returnProducts, HttpStatusCode.InternalServerError);
+                var things = await _context.Products.Include(x => x.additionalInformation)
+                .Where(x => parentThing.childrenProductsIds.Contains(x.productId))
+                .ToListAsync();
+
+                return things;
             }
-            return (returnProducts, HttpStatusCode.NotFound);
+            return null;
+        }
+
+        public async Task<Product> addProduct(Product product)
+        {
+            product.childrenProductsIds = new int[0];
+            product.productId = 0;
+            await _context.AddAsync(product);
+            await _context.SaveChangesAsync();
+            return product;
+        }
+
+        public async Task<Product> updateProduct(int productId, Product product)
+        {
+            var curTProduct = await _context.Products
+                            .AsNoTracking()
+                            .Where(x => x.productId == productId)
+                            .FirstOrDefaultAsync();
+
+            product.childrenProductsIds = curTProduct.childrenProductsIds;
+            product.parentProducId = product.parentProducId;
+            if (productId != product.productId)
+            {
+                return null;
+            }
+            _context.Products.Update(product);
+            await _context.SaveChangesAsync();
+            return product;
+        }
+
+        public async Task<bool> deleteProduct(int productId)
+        {
+            var product = await _context.Products
+                        .Where(x => x.productId == productId)
+                        .FirstOrDefaultAsync();
+
+            if (product != null)
+            {
+                product.enabled = false;
+                _context.Entry(product).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<Product> addChildrenProducts(int productId, Product product)
+        {
+            var parentProduct = await _context.Products
+                      .Where(x => x.productId == productId)
+                      .FirstOrDefaultAsync();
+
+            var childrenProduct = await _context.Products
+            .Where(x => x.productId == product.productId)
+            .FirstOrDefaultAsync();
+
+            if (parentProduct.childrenProductsIds.Contains(product.productId))
+                return null;
+
+            if (parentProduct != null && childrenProduct != null)
+            {
+                if (parentProduct.childrenProductsIds == null)
+                    parentProduct.childrenProductsIds = new int[0];
+
+                parentProduct.childrenProductsIds = parentProduct.childrenProductsIds.Append(product.productId).ToArray();
+
+                if (childrenProduct.parentProducId != null)
+                {
+                    var oldParentProduct = await _context.Products
+                    .Where(x => x.productId == productId)
+                    .FirstOrDefaultAsync();
+
+                    if (oldParentProduct != null)
+                        oldParentProduct.childrenProductsIds = oldParentProduct.childrenProductsIds.Where(val => val != product.productId).ToArray();
+                }
+                childrenProduct.parentProducId = productId;
+                await _context.SaveChangesAsync();
+                return product;
+
+            }
+            return null;
+        }
+
+        public async Task<Product> removeChildrenProducts(int productId, Product product)
+        {
+            var parentProduct = await _context.Products.Where(x => x.productId == productId).FirstOrDefaultAsync();
+            var childrenProduct = await _context.Products.Where(x => x.productId == product.productId).FirstOrDefaultAsync();
+            if (!parentProduct.childrenProductsIds.Contains(product.productId))
+                return null;
+            if (parentProduct != null && childrenProduct != null)
+            {
+
+                parentProduct.childrenProductsIds = parentProduct.childrenProductsIds.Where(val => val != product.productId).ToArray();
+                childrenProduct.parentProducId = null;
+                await _context.SaveChangesAsync();
+                return parentProduct;
+
+            }
+            return null;
         }
     }
 }
