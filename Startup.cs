@@ -35,6 +35,7 @@ namespace recipeservice
             services.AddDbContext<ApplicationDbContext>(options =>
                options.UseNpgsql(Configuration.GetConnectionString("RecipeDb")));
             services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IExtraAttributeTypeService, ExtraAttributeTypeService>();
             services.AddTransient<IPhaseService, PhaseService>();
             services.AddTransient<IPhaseParameterService, PhaseParameterService>();
             services.AddTransient<IPhaseProductService, PhaseProductService>();

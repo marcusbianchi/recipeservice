@@ -11,9 +11,10 @@ using System;
 namespace recipeservice.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171117164406_AdditionOfExtraAttributeTypes")]
+    partial class AdditionOfExtraAttributeTypes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,8 +46,7 @@ namespace recipeservice.Migrations
                     b.Property<int>("extraAttibruteTypeId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("extraAttibruteTypeName")
-                        .IsRequired()
+                    b.Property<int>("extraAttibruteTypeName")
                         .HasMaxLength(50);
 
                     b.HasKey("extraAttibruteTypeId");

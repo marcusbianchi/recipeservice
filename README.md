@@ -341,3 +341,35 @@ These are the fields of the thing and it's constrains:
     - Body: Product JSON
   - Delete: Remove Product with JSON in the body as child of parent Product.
     - Body: Product JSON
+
+# ExtraAttibuteTypesAPI
+API to Manage Extra Attibute Types that can be added on Lorien's products. Used to create, update, read and delete Extra Attibute Types.
+
+## Product Data Format
+These are the fields of the thing and it's constrains:
+- extraAttibruteTypeId: Id of the Extra Attibute Types given by de Database.
+  - Integer
+  - Ignored on Create, mandatory on the other methods
+- extraAttibruteTypeName: Name of the Extra Attibute Types given by the user.
+  - String (Up to 50 chars)
+  - Mandatory
+  
+### JSON Example:
+```json
+{
+  "extraAttibruteTypeId": 4,
+  "extraAttibruteTypeName": "teste 2212"
+}
+```
+
+## URLs
+- api/products/
+  - Get: Return List of Extra Attibute Types   
+  - Post: Create the Extra Attibute Types with the JSON in the body
+    - Body: Extra Attibute Types JSON
+
+- api/products/{id}
+  - Get: Return Extra Attibute Types with extraAttibruteTypeId = ID
+  - Put: Update the Extra Attibute Types with the JSON in the body with extraAttibruteTypeId = ID
+    - Body: Extra Attibute Types JSON
+  - Delete: Disable Extra Attibute Types with extraAttibruteTypeId = ID

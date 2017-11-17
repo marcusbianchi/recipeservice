@@ -11,7 +11,7 @@ namespace recipeservice.Data
         public DbSet<PhaseParameter> PhaseParameters { get; set; }
         public DbSet<PhaseProduct> PhaseProducts { get; set; }
         public DbSet<Product> Products { get; set; }
-
+        public DbSet<ExtraAttibruteType> ExtraAttibruteTypes { get; set; }
         public DbSet<AdditionalInformation> AdditionalInformations { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)

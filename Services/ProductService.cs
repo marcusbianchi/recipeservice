@@ -19,7 +19,6 @@ namespace recipeservice.Services
     {
         private IConfiguration _configuration;
         private readonly ApplicationDbContext _context;
-        private HttpClient client = new HttpClient();
         public ProductService(IConfiguration configuration, ApplicationDbContext context)
         {
             _configuration = configuration;
