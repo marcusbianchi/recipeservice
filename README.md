@@ -337,10 +337,6 @@ These are the fields of the thing and it's constrains:
 
 - api/products/childrenproducts/{parentId}
   - Get: Return List of Products which the parent is parentId
-  - Post: Insert the Product with the JSON in the body as child of the parent Product
-    - Body: Product JSON
-  - Delete: Remove Product with JSON in the body as child of parent Product.
-    - Body: Product JSON
 
 # ExtraAttibuteTypesAPI
 API to Manage Extra Attibute Types that can be added on Lorien's products. Used to create, update, read and delete Extra Attibute Types.
