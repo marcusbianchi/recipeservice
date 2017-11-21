@@ -52,7 +52,7 @@ namespace recipeservice.Controllers
         public async Task<IActionResult> Post([FromBody]Product product)
         {
             product.productId = 0;
-            product.parentProducId = null;
+            product.parentProductsIds = new int[0];
             product.childrenProductsIds = new int[0];
 
             if (ModelState.IsValid)

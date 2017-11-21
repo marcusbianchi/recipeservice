@@ -7,14 +7,14 @@ namespace recipeservice.Model
     public class Product
     {
         public int productId { get; set; }
-        public int? parentProducId { get; set; }
+        public int[] parentProductsIds { get; set; }
         [Required]
         [MaxLength(50)]
-        public string producName { get; set; }
+        public string productName { get; set; }
         [MaxLength(100)]
-        public string producDescription { get; set; }
+        public string productDescription { get; set; }
         [MaxLength(50)]
-        public string producCode { get; set; }
+        public string productCode { get; set; }
         [MaxLength(50)]
         public string productGTIN { get; set; }
         public int[] childrenProductsIds { get; set; }

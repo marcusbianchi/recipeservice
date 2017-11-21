@@ -93,7 +93,7 @@ namespace recipeservice.Services
                             .FirstOrDefaultAsync();
 
             product.childrenProductsIds = curTProduct.childrenProductsIds;
-            product.parentProducId = product.parentProducId;
+            product.parentProductsIds = product.parentProductsIds;
             if (productId != product.productId)
             {
                 return null;
@@ -121,56 +121,56 @@ namespace recipeservice.Services
 
         public async Task<Product> addChildrenProducts(int productId, Product product)
         {
-            var parentProduct = await _context.Products
-                      .Where(x => x.productId == productId)
-                      .FirstOrDefaultAsync();
+            // var parentProduct = await _context.Products
+            //           .Where(x => x.productId == productId)
+            //           .FirstOrDefaultAsync();
 
-            var childrenProduct = await _context.Products
-            .Where(x => x.productId == product.productId)
-            .FirstOrDefaultAsync();
+            // var childrenProduct = await _context.Products
+            // .Where(x => x.productId == product.productId)
+            // .FirstOrDefaultAsync();
 
-            if (parentProduct.childrenProductsIds.Contains(product.productId))
-                return null;
+            // if (parentProduct.childrenProductsIds.Contains(product.productId))
+            //     return null;
 
-            if (parentProduct != null && childrenProduct != null)
-            {
-                if (parentProduct.childrenProductsIds == null)
-                    parentProduct.childrenProductsIds = new int[0];
+            // if (parentProduct != null && childrenProduct != null)
+            // {
+            //     if (parentProduct.childrenProductsIds == null)
+            //         parentProduct.childrenProductsIds = new int[0];
 
-                parentProduct.childrenProductsIds = parentProduct.childrenProductsIds.Append(product.productId).ToArray();
+            //     parentProduct.childrenProductsIds = parentProduct.childrenProductsIds.Append(product.productId).ToArray();
 
-                if (childrenProduct.parentProducId != null)
-                {
-                    var oldParentProduct = await _context.Products
-                    .Where(x => x.productId == productId)
-                    .FirstOrDefaultAsync();
+            //     if (childrenProduct.parentProductsIds != null)
+            //     {
+            //         var oldParentProduct = await _context.Products
+            //         .Where(x => x.productId == productId)
+            //         .FirstOrDefaultAsync();
 
-                    if (oldParentProduct != null)
-                        oldParentProduct.childrenProductsIds = oldParentProduct.childrenProductsIds.Where(val => val != product.productId).ToArray();
-                }
-                childrenProduct.parentProducId = productId;
-                await _context.SaveChangesAsync();
-                return product;
+            //         if (oldParentProduct != null)
+            //             oldParentProduct.childrenProductsIds = oldParentProduct.childrenProductsIds.Where(val => val != product.productId).ToArray();
+            //     }
+            //     childrenProduct.parentProducId = productId;
+            //     await _context.SaveChangesAsync();
+            //     return product;
 
-            }
+            // }
             return null;
         }
 
         public async Task<Product> removeChildrenProducts(int productId, Product product)
         {
-            var parentProduct = await _context.Products.Where(x => x.productId == productId).FirstOrDefaultAsync();
-            var childrenProduct = await _context.Products.Where(x => x.productId == product.productId).FirstOrDefaultAsync();
-            if (!parentProduct.childrenProductsIds.Contains(product.productId))
-                return null;
-            if (parentProduct != null && childrenProduct != null)
-            {
+            // var parentProduct = await _context.Products.Where(x => x.productId == productId).FirstOrDefaultAsync();
+            // var childrenProduct = await _context.Products.Where(x => x.productId == product.productId).FirstOrDefaultAsync();
+            // if (!parentProduct.childrenProductsIds.Contains(product.productId))
+            //     return null;
+            // if (parentProduct != null && childrenProduct != null)
+            // {
 
-                parentProduct.childrenProductsIds = parentProduct.childrenProductsIds.Where(val => val != product.productId).ToArray();
-                childrenProduct.parentProducId = null;
-                await _context.SaveChangesAsync();
-                return parentProduct;
+            //     parentProduct.childrenProductsIds = parentProduct.childrenProductsIds.Where(val => val != product.productId).ToArray();
+            //     childrenProduct.parentProducId = null;
+            //     await _context.SaveChangesAsync();
+            //     return parentProduct;
 
-            }
+            // }
             return null;
         }
     }

@@ -11,9 +11,10 @@ using System;
 namespace recipeservice.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171121170020_CorrectionOnFieldName")]
+    partial class CorrectionOnFieldName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -142,7 +143,7 @@ namespace recipeservice.Migrations
 
                     b.Property<bool>("enabled");
 
-                    b.Property<int[]>("parentProductsIds");
+                    b.Property<int?>("parentProducId");
 
                     b.Property<string>("productCode")
                         .HasMaxLength(50);

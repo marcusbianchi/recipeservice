@@ -274,9 +274,9 @@ These are the fields of the thing and it's constrains:
 - productId: Id of the Product given by de Database.
   - Integer
   - Ignored on Create, mandatory on the other methods
-- parentProducId: Id of the Product wich this thing belong to.
-  - Integer
-  -  Ignored on Create and Update
+- parentProductsIds: Ids of the products that Generate this product.
+  - Array Integer
+  - Ignored on Create and Update
 - productName: Name of the Product given by the user.
   - String (Up to 50 chars)
   - Mandatory
@@ -303,10 +303,10 @@ These are the fields of the thing and it's constrains:
 ```json
 {
     "productId": 2,
-    "parentProducId": null,
-    "producName": "Nome Teste 2",
-    "producDescription": "Teste Decription",
-    "producCode": "TesteCode",
+    "parentProducId": [5,7],
+    "productName": "Nome Teste 2",
+    "productDescription": "Teste Decription",
+    "productCode": "TesteCode",
     "productGTIN": "+9999999",
     "childrenProductsIds": [1,2],
     "enabled": true,
