@@ -28,7 +28,13 @@ namespace recipeservice
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+            services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                }));
+
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSingleton<IThingService, ThingService>();
             services.AddSingleton<IThingGroupService, ThingGroupService>();
@@ -50,14 +56,15 @@ namespace recipeservice
                     Location = ResponseCacheLocation.Any
                 });
             }).AddJsonOptions(options =>
-                {
-                    // options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-                });
+            {
+                options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseCors("CorsPolicy");
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
