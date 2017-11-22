@@ -64,7 +64,7 @@ These are the fields of the phase parameter and it's constrains:
 * measurementUnit:Unit of measurement of the given product
   * String (Up to 50 chars)
   * Mandatory
-* tags: Tag as saved on the Tag API
+* tag: Tag as saved on the Tag API
   * Tag Object (Composed by: tagId, tagName, tagDescription, ThingGroup)
   * Ignored on Create, mandatory on the other methods
 
