@@ -14,9 +14,6 @@ namespace recipeservice.Services.Interfaces
         Task<bool> deleteProduct(int productId);
         Task<List<Product>> getProductList(int[] prolductIds);
         Task<List<Product>> GetChildrenProducts(int productId);
-        Task<Product> addChildrenProducts(int productId, Product product);
-        Task<Product> removeChildrenProducts(int productId, Product product);
-
 
     }
 }

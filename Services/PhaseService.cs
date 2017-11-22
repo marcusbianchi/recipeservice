@@ -15,15 +15,15 @@ namespace recipeservice.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly IProductService _productService;
-        private readonly IParametersService _parametersService;
+        private readonly ITagsService _tagService;
 
         public PhaseService(ApplicationDbContext context,
         IProductService productService,
-        IParametersService parametersService)
+        ITagsService tagService)
         {
             _context = context;
             _productService = productService;
-            _parametersService = parametersService;
+            _tagService = tagService;
         }
 
         public async Task<Phase> getPhase(int phaseId)
@@ -37,15 +37,15 @@ namespace recipeservice.Services
             {
                 if (phase.phaseParameters != null)
                 {
-                    int[] parametersId = phase.phaseParameters.Select(x => x.parameterId).ToArray();
+                    int[] parametersId = phase.phaseParameters.Select(x => x.tagId).ToArray();
                     if (parametersId.Length > 0)
                     {
-                        var (parameters, statusParameter) = await _parametersService.getParameterList(parametersId);
+                        var (tags, statusParameter) = await _tagService.getParameterList(parametersId);
                         if (statusParameter == HttpStatusCode.OK)
                         {
                             phase.phaseParameters.ToList()
-                             .ForEach(x => x.parameter = parameters
-                             .Where(y => y.parameterId == x.parameterId).FirstOrDefault());
+                             .ForEach(x => x.tag = tags
+                             .Where(y => y.tagId == x.tagId).FirstOrDefault());
 
                         }
                     }

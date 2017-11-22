@@ -22,20 +22,20 @@ namespace recipeservice.Controllers
         private IThingService _thingService;
         private IThingGroupService _thingGroupService;
         private IProductService _productService;
-        private IParametersService _parametersService;
+        private ITagsService _tagsService;
 
         public GatewayController(IConfiguration configuration,
          IThingService thingService,
          IThingGroupService thingGroupService,
          IProductService productService,
-         IParametersService parametersService
+         ITagsService tagsService
          )
         {
             _configuration = configuration;
             _thingService = thingService;
             _thingGroupService = thingGroupService;
             _productService = productService;
-            _parametersService = parametersService;
+            _tagsService = tagsService;
         }
 
         [HttpGet("gateway/thinggroups/")]
@@ -99,30 +99,30 @@ namespace recipeservice.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
-        [HttpGet("gateway/parameters/{id}")]
+        [HttpGet("gateway/tags/{id}")]
         [Produces("application/json")]
         public async Task<IActionResult> GetParameter(int id)
         {
-            var (thing, resultCode) = await _parametersService.getParameter(id);
+            var (tag, resultCode) = await _tagsService.getParameter(id);
             switch (resultCode)
             {
                 case HttpStatusCode.OK:
-                    return Ok(thing);
+                    return Ok(tag);
                 case HttpStatusCode.NotFound:
                     return NotFound();
             }
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
-        [HttpGet("gateway/parameters/")]
+        [HttpGet("gateway/tags/")]
         [Produces("application/json")]
         public async Task<IActionResult> GetParameters([FromQuery]int startat, [FromQuery]int quantity)
         {
 
-            var (parameters, resultCode) = await _parametersService.getParameters(startat, quantity);
+            var (tags, resultCode) = await _tagsService.getParameters(startat, quantity);
             switch (resultCode)
             {
                 case HttpStatusCode.OK:
-                    return Ok(parameters);
+                    return Ok(tags);
                 case HttpStatusCode.NotFound:
                     return NotFound();
             }

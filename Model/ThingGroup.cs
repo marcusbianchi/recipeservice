@@ -7,6 +7,6 @@ namespace recipeservice.Model
         public int thingGroupId { get; set; }
         public string groupName { get; set; }
         public string groupCode { get; set; }
-        public ICollection<Parameter> parameters { get; set; }
+        public ICollection<Tag> tags { get; set; }
     }
 }

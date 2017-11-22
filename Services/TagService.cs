@@ -12,67 +12,67 @@ using recipeservice.Services.Interfaces;
 
 namespace recipeservice.Services
 {
-    public class ParameterService : IParametersService
+    public class TagService : ITagsService
     {
         private IConfiguration _configuration;
         private HttpClient client = new HttpClient();
-        public ParameterService(IConfiguration configuration)
+        public TagService(IConfiguration configuration)
         {
             _configuration = configuration;
         }
-        public async Task<(Parameter, HttpStatusCode)> getParameter(int thingId)
+        public async Task<(Tag, HttpStatusCode)> getParameter(int tagId)
         {
-            Parameter returnParameter = null;
+            Tag returnTag = null;
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            var builder = new UriBuilder(_configuration["thingServiceEndpoint"] + "/api/parameters/" + thingId);
+            var builder = new UriBuilder(_configuration["thingServiceEndpoint"] + "/api/tags/" + tagId);
             string url = builder.ToString();
             var result = await client.GetAsync(url);
             switch (result.StatusCode)
             {
                 case HttpStatusCode.OK:
-                    returnParameter = JsonConvert.DeserializeObject<Parameter>(await client.GetStringAsync(url));
-                    return (returnParameter, HttpStatusCode.OK);
+                    returnTag = JsonConvert.DeserializeObject<Tag>(await client.GetStringAsync(url));
+                    return (returnTag, HttpStatusCode.OK);
                 case HttpStatusCode.NotFound:
-                    return (returnParameter, HttpStatusCode.NotFound);
+                    return (returnTag, HttpStatusCode.NotFound);
                 case HttpStatusCode.InternalServerError:
-                    return (returnParameter, HttpStatusCode.InternalServerError);
+                    return (returnTag, HttpStatusCode.InternalServerError);
             }
-            return (returnParameter, HttpStatusCode.NotFound);
+            return (returnTag, HttpStatusCode.NotFound);
 
         }
 
-        public async Task<(List<Parameter>, HttpStatusCode)> getParameterList(int[] parameterids)
+        public async Task<(List<Tag>, HttpStatusCode)> getParameterList(int[] parameterids)
         {
-            List<Parameter> listParameters = null;
+            List<Tag> listTags = null;
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            var builder = new UriBuilder(_configuration["thingServiceEndpoint"] + "/api/parameters/list?");
+            var builder = new UriBuilder(_configuration["thingServiceEndpoint"] + "/api/tags/list?");
             string url = builder.ToString();
             foreach (var item in parameterids)
             {
-                url += $"parameterid={item}&";
+                url += $"tagid={item}&";
             }
             var result = await client.GetAsync(url);
             switch (result.StatusCode)
             {
                 case HttpStatusCode.OK:
-                    listParameters = JsonConvert.DeserializeObject<List<Parameter>>(await client.GetStringAsync(url));
-                    return (listParameters, HttpStatusCode.OK);
+                    listTags = JsonConvert.DeserializeObject<List<Tag>>(await client.GetStringAsync(url));
+                    return (listTags, HttpStatusCode.OK);
                 case HttpStatusCode.NotFound:
-                    return (listParameters, HttpStatusCode.NotFound);
+                    return (listTags, HttpStatusCode.NotFound);
                 case HttpStatusCode.InternalServerError:
-                    return (listParameters, HttpStatusCode.InternalServerError);
+                    return (listTags, HttpStatusCode.InternalServerError);
             }
-            return (listParameters, HttpStatusCode.NotFound);
+            return (listTags, HttpStatusCode.NotFound);
         }
 
-        public async Task<(List<Parameter>, HttpStatusCode)> getParameters(int startat, int quantity)
+        public async Task<(List<Tag>, HttpStatusCode)> getParameters(int startat, int quantity)
         {
-            List<Parameter> returnParameters = null;
+            List<Tag> returnTag = null;
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            var builder = new UriBuilder(_configuration["thingServiceEndpoint"] + "/api/parameters");
+            var builder = new UriBuilder(_configuration["thingServiceEndpoint"] + "/api/tags");
             var query = HttpUtility.ParseQueryString(builder.Query);
             if (startat != 0)
                 query["startat"] = startat.ToString();
@@ -84,14 +84,14 @@ namespace recipeservice.Services
             switch (result.StatusCode)
             {
                 case HttpStatusCode.OK:
-                    returnParameters = JsonConvert.DeserializeObject<List<Parameter>>(await client.GetStringAsync(url));
-                    return (returnParameters, HttpStatusCode.OK);
+                    returnTag = JsonConvert.DeserializeObject<List<Tag>>(await client.GetStringAsync(url));
+                    return (returnTag, HttpStatusCode.OK);
                 case HttpStatusCode.NotFound:
-                    return (returnParameters, HttpStatusCode.NotFound);
+                    return (returnTag, HttpStatusCode.NotFound);
                 case HttpStatusCode.InternalServerError:
-                    return (returnParameters, HttpStatusCode.InternalServerError);
+                    return (returnTag, HttpStatusCode.InternalServerError);
             }
-            return (returnParameters, HttpStatusCode.NotFound);
+            return (returnTag, HttpStatusCode.NotFound);
         }
     }
 }

@@ -51,12 +51,12 @@ namespace recipeservice.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]Product product)
         {
-            product.productId = 0;
-            product.parentProductsIds = new int[0];
-            product.childrenProductsIds = new int[0];
-
             if (ModelState.IsValid)
             {
+                product.productId = 0;
+                product.parentProductsIds = new int[0];
+                product.childrenProductsIds = new int[0];
+
                 product = await _productService.addProduct(product);
                 return Created($"api/products/{product.productId}", product);
             }

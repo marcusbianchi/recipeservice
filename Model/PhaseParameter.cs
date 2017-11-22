@@ -7,7 +7,7 @@ namespace recipeservice.Model
     {
         public int phaseParameterId { get; set; }
         [Required]
-        public int parameterId { get; set; }
+        public int tagId { get; set; }
         [Required]
         [MaxLength(50)]
         public string setupValue { get; set; }
@@ -19,7 +19,7 @@ namespace recipeservice.Model
         [MaxLength(50)]
         public string maxValue { get; set; }
         [NotMapped]
-        public Parameter parameter { get; set; }
+        public Tag tag { get; set; }
 
 
     }

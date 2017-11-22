@@ -38,7 +38,7 @@ namespace recipeservice
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSingleton<IThingService, ThingService>();
             services.AddSingleton<IThingGroupService, ThingGroupService>();
-            services.AddSingleton<IParametersService, ParameterService>();
+            services.AddSingleton<ITagsService, TagService>();
             services.AddDbContext<ApplicationDbContext>(options =>
                options.UseNpgsql(Configuration.GetConnectionString("RecipeDb")));
             services.AddTransient<IProductService, ProductService>();
@@ -48,6 +48,7 @@ namespace recipeservice
             services.AddTransient<IPhaseProductService, PhaseProductService>();
             services.AddTransient<IRecipeService, RecipeService>();
             services.AddTransient<IRecipePhaseService, RecipePhaseService>();
+            services.AddResponseCaching();
             services.AddMvc((options) =>
             {
                 options.CacheProfiles.Add("recipecache", new CacheProfile()
@@ -64,7 +65,9 @@ namespace recipeservice
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseResponseCaching();
             app.UseCors("CorsPolicy");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

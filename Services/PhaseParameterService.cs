@@ -13,21 +13,21 @@ namespace recipeservice.Services
     public class PhaseParameterService : IPhaseParameterService
     {
         private readonly ApplicationDbContext _context;
-        private readonly IParametersService _parametersService;
+        private readonly ITagsService _tagService;
         private readonly IPhaseService _phaseService;
 
         public PhaseParameterService(ApplicationDbContext context,
-       IParametersService parametersService,
+       ITagsService tagService,
        IPhaseService phaseService)
         {
             _context = context;
-            _parametersService = parametersService;
+            _tagService = tagService;
             _phaseService = phaseService;
         }
 
         private async Task<PhaseParameter> AddParameter(PhaseParameter phaseParameter, Phase currentPhase)
         {
-            var (parameter, code) = await _parametersService.getParameter(phaseParameter.parameterId);
+            var (tag, code) = await _tagService.getParameter(phaseParameter.tagId);
             if (code == HttpStatusCode.OK)
             {
                 if (currentPhase.phaseParameters == null)
@@ -47,7 +47,7 @@ namespace recipeservice.Services
             if (curPhase.phaseParameters != null)
             {
                 if (curPhase != null && !curPhase.phaseParameters
-                .Select(x => x.parameterId).ToList().Contains(phaseParameter.parameterId))
+                .Select(x => x.tagId).ToList().Contains(phaseParameter.tagId))
                 {
                     return await AddParameter(phaseParameter, curPhase);
                 }
@@ -84,15 +84,15 @@ namespace recipeservice.Services
             {
                 if (phase.phaseParameters != null)
                 {
-                    int[] parametersId = phase.phaseParameters.Select(x => x.parameterId).ToArray();
+                    int[] parametersId = phase.phaseParameters.Select(x => x.tagId).ToArray();
                     if (parametersId.Length > 0)
                     {
-                        var (parameters, statusParameter) = await _parametersService.getParameterList(parametersId);
+                        var (tags, statusParameter) = await _tagService.getParameterList(parametersId);
                         if (statusParameter == HttpStatusCode.OK)
                         {
                             phase.phaseParameters.ToList()
-                             .ForEach(x => x.parameter = parameters
-                             .Where(y => y.parameterId == x.parameterId).FirstOrDefault());
+                             .ForEach(x => x.tag = tags
+                             .Where(y => y.tagId == x.tagId).FirstOrDefault());
 
                         }
                     }
