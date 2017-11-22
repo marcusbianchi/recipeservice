@@ -111,7 +111,8 @@ These are the fields of the phase and it's constrains:
 * outputProducts: Array of the Output Products.
   * List of Product Objects
   * Ignored on Create, mandatory on the other methods
-* phaseParameters: Parameters of the phase. -List of Parameter Objects
+* phaseParameters: Parameters of the phase.
+  * List of Parameter Objects
   * Ignored on Create, mandatory on the other methods,
 * predecessorPhaseId: Id of the previous phase
   * Integer
