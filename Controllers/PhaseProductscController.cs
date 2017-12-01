@@ -15,11 +15,11 @@ using recipeservice.Services.Interfaces;
 
 namespace recipeservice.Controllers
 {
-    [Route("api/phases/products/input")]
-    public class PhaseInputProductscController : Controller
+    [Route("api/phases/products/")]
+    public class PhaseProductscController : Controller
     {
         private readonly IPhaseProductService _phaseProductService;
-        public PhaseInputProductscController(IPhaseProductService phaseProductService)
+        public PhaseProductscController(IPhaseProductService phaseProductService)
         {
             _phaseProductService = phaseProductService;
         }
@@ -27,17 +27,17 @@ namespace recipeservice.Controllers
         [HttpGet("{phaseId}")]
         public async Task<IActionResult> Get(int phaseId)
         {
-            return Ok(await _phaseProductService.getInputProductsFromPhase(phaseId));
+            return Ok(await _phaseProductService.getProductsFromPhase(phaseId));
         }
 
 
         [HttpPost("{phaseId}")]
         public async Task<IActionResult> Post(int phaseId, [FromBody]PhaseProduct PhaseProduct)
         {
-            PhaseProduct.phaseProductId = 0;
             if (ModelState.IsValid)
             {
-                var phase = await _phaseProductService.addInputProductToPhase(PhaseProduct, phaseId);
+                PhaseProduct.phaseProductId = 0;
+                var phase = await _phaseProductService.addProductToPhase(PhaseProduct, phaseId);
                 if (phase != null)
                     return Ok(phase);
                 return NotFound();

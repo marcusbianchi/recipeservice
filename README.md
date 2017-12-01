@@ -19,6 +19,9 @@ These are the fields of the phase product and it's constrains:
 * measurementUnit:Unit of measurement of the given product
   * String (Up to 50 chars)
   * Mandatory
+* phaseProductType: Which type of product is this in related to the Recipe.
+  * Enumerable(Possible values: scrap, finished, semi_finished)
+  * Mandatory
 * product: Product as saved on the Product API
   * Product Object (Composed by:
     productId,producName,producCode,productGTIN,childrenProductsIds)
@@ -32,6 +35,7 @@ These are the fields of the phase product and it's constrains:
   "productId": 2,
   "value": "50",
   "measurementUnit": "kg",
+  "phaseProductType": "finished",
   "product": {
     "productId": 2,
     "producName": "Nome Teste 2",
@@ -130,9 +134,8 @@ These are the fields of the phase and it's constrains:
   "phaseCode": "xpto",
   "inputProducts": [],
   "outputProducts": [],
-  "phaseParameters": [],
   "predecessorPhaseId": 0,
-  "sucessorPhasesId": [3, 2]
+  "phaseProducts": [3, 2]
 }
 ```
 
@@ -153,19 +156,12 @@ These are the fields of the phase and it's constrains:
     * Body: Phase JSON
   * Delete: Delete the phase from the Database with phaseId = ID
 
-* api/phases/products/output/{phaseid}
+* api/phases/products/{phaseid}
 
   * Get: Return All the Output Products with phaseId = phaseId
   * Post: Add the Product as an output product on phaseId
     * Body: Product JSON
   * Delete: Delete the product from the output product list
-
-* api/phases/products/input/{phaseid}
-
-  * Get: Return All the input Products with phaseId = phaseId
-  * Post: Add the Product as an input product on phaseId
-    * Body: Product JSON
-  * Delete: Delete the product from the input product list
 
 * api/phases/parameters/{phaseid}
   * Get: Return All the parameters with phaseId = phaseId
@@ -221,12 +217,12 @@ from other APIs
 * gateway/products/childrenproducts/{productid}
   * Get: List of Products inside the product where productId = ID
 
-# PhaseAPI
+# RecipeAPI
 
 API to Manage Recipes on Lorien. Used to create, update, read and delete
 Recipes. Also responsible for managing its products and phases
 
-## Phase Product Data Format
+## Recipe Data Format
 
 These are the fields of the phase product and it's constrains:
 
@@ -336,7 +332,6 @@ These are the fields of the thing and it's constrains:
   * Array Integer
   * Ignored on Create and Update
 * additionalInformation: List of additional information related to de product.
-
   * Array AdditionalInformation
   * Optional
 

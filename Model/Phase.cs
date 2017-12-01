@@ -13,8 +13,7 @@ namespace recipeservice.Model
         public string phaseCode { get; set; }
         public int predecessorPhaseId { get; set; }
         public int[] sucessorPhasesIds { get; set; }
-        public ICollection<PhaseProduct> inputProducts { get; set; }
-        public ICollection<PhaseProduct> outputProducts { get; set; }
+        public ICollection<PhaseProduct> phaseProducts { get; set; }
         public ICollection<PhaseParameter> phaseParameters { get; set; }
     }
 }

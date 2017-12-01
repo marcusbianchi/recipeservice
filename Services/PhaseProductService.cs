@@ -30,13 +30,13 @@ namespace recipeservice.Services
             _productService = productService;
             _phaseService = phaseService;
         }
-        public async Task<PhaseProduct> addInputProductToPhase(PhaseProduct phaseProduct, int phaseId)
+        public async Task<PhaseProduct> addProductToPhase(PhaseProduct phaseProduct, int phaseId)
         {
 
             var curPhase = await _phaseService.getPhase(phaseId);
-            if (curPhase.outputProducts != null)
+            if (curPhase.phaseProducts != null)
             {
-                if (curPhase != null && !curPhase.inputProducts
+                if (curPhase != null && !curPhase.phaseProducts
                 .Select(x => x.productId).ToList().Contains(phaseProduct.productId))
                 {
                     return await AddProduct(phaseProduct, curPhase, ListType.input);
@@ -45,25 +45,6 @@ namespace recipeservice.Services
             else
             {
                 return await AddProduct(phaseProduct, curPhase, ListType.input);
-            }
-            return null;
-        }
-
-        public async Task<PhaseProduct> addOutputProductToPhase(PhaseProduct phaseProduct, int phaseId)
-        {
-
-            var curPhase = await _phaseService.getPhase(phaseId);
-            if (curPhase.outputProducts != null)
-            {
-                if (curPhase != null && !curPhase.outputProducts
-                .Select(x => x.productId).ToList().Contains(phaseProduct.productId))
-                {
-                    return await AddProduct(phaseProduct, curPhase, ListType.output);
-                }
-            }
-            else
-            {
-                return await AddProduct(phaseProduct, curPhase, ListType.output);
             }
             return null;
         }
@@ -82,31 +63,20 @@ namespace recipeservice.Services
             return null;
         }
 
-        public async Task<List<PhaseProduct>> getOutputProductsFromPhase(int phaseId)
+        public async Task<List<PhaseProduct>> getProductsFromPhase(int phaseId)
         {
             return await getProductsFromPhase(phaseId, ListType.output);
-        }
-        public async Task<List<PhaseProduct>> getInputProductsFromPhase(int phaseId)
-        {
-            return await getProductsFromPhase(phaseId, ListType.input);
         }
 
         private async Task<List<PhaseProduct>> getProductsFromPhase(int phaseId, ListType type)
         {
             List<PhaseProduct> phaseProducts = null;
             Phase phase = null;
-            if (type == ListType.input)
-            {
-                phase = await _context.Phases.Include(x => x.inputProducts)
-                .Where(x => x.phaseId == phaseId).FirstOrDefaultAsync();
-                phaseProducts = phase.inputProducts.ToList();
-            }
-            else if (type == ListType.output)
-            {
-                phase = await _context.Phases.Include(x => x.outputProducts)
-                .Where(x => x.phaseId == phaseId).FirstOrDefaultAsync();
-                phaseProducts = phase.outputProducts.ToList();
-            }
+
+            phase = await _context.Phases.Include(x => x.phaseProducts)
+            .Where(x => x.phaseId == phaseId).FirstOrDefaultAsync();
+            phaseProducts = phase.phaseProducts.ToList();
+
 
             var products = await _productService.getProductList(phaseProducts.Select(x => x.productId).ToArray());
             if (products.Count > 0)
@@ -121,18 +91,9 @@ namespace recipeservice.Services
         {
             var product = await _productService.getProduct(phaseProduct.productId);
 
-            if (type == ListType.input)
-            {
-                if (currentPhase.inputProducts == null)
-                    currentPhase.inputProducts = new List<PhaseProduct>();
-                currentPhase.inputProducts.Add(phaseProduct);
-            }
-            else if (type == ListType.output)
-            {
-                if (currentPhase.outputProducts == null)
-                    currentPhase.outputProducts = new List<PhaseProduct>();
-                currentPhase.outputProducts.Add(phaseProduct);
-            }
+            if (currentPhase.phaseProducts == null)
+                currentPhase.phaseProducts = new List<PhaseProduct>();
+            currentPhase.phaseProducts.Add(phaseProduct);
             await _context.SaveChangesAsync();
 
             return phaseProduct;

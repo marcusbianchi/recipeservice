@@ -29,9 +29,8 @@ namespace recipeservice.Services
         public async Task<Phase> getPhase(int phaseId)
         {
             Phase phase = await _context.Phases
-            .Include(x => x.inputProducts)
+            .Include(x => x.phaseProducts)
             .Include(x => x.phaseParameters)
-            .Include(x => x.outputProducts)
             .Where(x => x.phaseId == phaseId).FirstOrDefaultAsync();
             if (phase != null)
             {
@@ -52,25 +51,14 @@ namespace recipeservice.Services
                 }
 
                 List<int> productsId = new List<int>();
-                if (phase.inputProducts != null)
-                    productsId.AddRange(phase.inputProducts.Select(x => x.productId).ToList());
-                if (phase.outputProducts != null)
-                {
-                    foreach (var item in phase.outputProducts.Select(x => x.productId))
-                        if (!productsId.Contains(item))
-                            productsId.Add(item);
-                }
+                if (phase.phaseProducts != null)
+                    productsId.AddRange(phase.phaseProducts.Select(x => x.productId).ToList());
                 if (productsId.Count > 0)
                 {
                     var products = await _productService.getProductList(productsId.ToArray());
                     if (productsId.Count > 0)
                     {
-
-                        phase.inputProducts.ToList()
-                         .ForEach(x => x.product = products
-                         .Where(y => y.productId == x.productId).FirstOrDefault());
-
-                        phase.outputProducts.ToList()
+                        phase.phaseProducts.ToList()
                         .ForEach(x => x.product = products
                         .Where(y => y.productId == x.productId).FirstOrDefault());
                     }
@@ -83,9 +71,8 @@ namespace recipeservice.Services
         public async Task<List<Phase>> getPhases(int startat, int quantity)
         {
             var phases = await _context.Phases
-            .Include(x => x.inputProducts)
+            .Include(x => x.phaseProducts)
             .Include(x => x.phaseParameters)
-            .Include(x => x.outputProducts)
            .OrderBy(x => x.phaseId)
            .Skip(startat).Take(quantity)
            .ToListAsync();
@@ -100,9 +87,8 @@ namespace recipeservice.Services
         public async Task<Phase> updatePhase(int phaseId, Phase phase)
         {
             var curPhase = await _context.Phases
-                .Include(x => x.inputProducts)
+                .Include(x => x.phaseProducts)
                 .Include(x => x.phaseParameters)
-                .Include(x => x.outputProducts)
                .AsNoTracking()
                .Where(x => x.phaseId == phaseId)
                .FirstOrDefaultAsync();
@@ -112,9 +98,7 @@ namespace recipeservice.Services
             {
                 return null;
             }
-
-            phase.inputProducts = curPhase.inputProducts;
-            phase.outputProducts = curPhase.outputProducts;
+            phase.phaseProducts = curPhase.phaseProducts;
             phase.phaseParameters = phase.phaseParameters;
 
             _context.Phases.Update(phase);
@@ -124,8 +108,7 @@ namespace recipeservice.Services
         public async Task<Phase> addPhase(Phase phase)
         {
 
-            phase.inputProducts = new List<PhaseProduct>();
-            phase.outputProducts = new List<PhaseProduct>();
+            phase.phaseProducts = new List<PhaseProduct>();
             phase.phaseParameters = new List<PhaseParameter>();
             phase.sucessorPhasesIds = new int[0];
             await _context.AddAsync(phase);
@@ -136,9 +119,8 @@ namespace recipeservice.Services
         public async Task<Phase> deletePhase(int phaseId)
         {
             var curPhase = await _context.Phases
-                .Include(x => x.inputProducts)
+                .Include(x => x.phaseProducts)
                 .Include(x => x.phaseParameters)
-                .Include(x => x.outputProducts)
               .AsNoTracking()
               .Where(x => x.phaseId == phaseId)
               .FirstOrDefaultAsync();
