@@ -46,29 +46,28 @@ namespace recipeservice.Services
             return products;
         }
 
-        public async Task<List<Product>> getProducts(int startat, int quantity)
+        public async Task<(List<Product>, int)> getProducts(int startat, int quantity,
+        ProductFields fieldFilter, string fieldValue, ProductFields orderField, OrderEnum order)
         {
-            if (quantity == 0)
-                quantity = 50;
-            var products = await _context.Products
-                      .Include(x => x.additionalInformation)
-                      .Where(x => x.enabled == true)
-                      .OrderBy(x => x.productId)
-                      .Skip(startat)
-                      .Take(quantity)
-                      .ToListAsync();
-            return products;
+            var queryProducts = _context.Products
+                      .Where(x => x.enabled == true);
+            queryProducts = ApplyFilter(queryProducts, fieldFilter, fieldValue);
+            queryProducts = ApplyOrder(queryProducts, orderField, order);
+            var products = await queryProducts.Include(x => x.additionalInformation)
+            .Skip(startat).Take(quantity).ToListAsync();
+            var totalCount = await _context.Products.CountAsync();
+            return (products, totalCount);
         }
 
         public async Task<List<Product>> GetChildrenProducts(int productId)
         {
-            var parentThing = await _context.Products
+            var parentProduct = await _context.Products
            .Where(x => x.productId == productId).FirstOrDefaultAsync();
 
-            if (parentThing != null)
+            if (parentProduct != null)
             {
                 var things = await _context.Products.Include(x => x.additionalInformation)
-                .Where(x => parentThing.childrenProductsIds.Contains(x.productId))
+                .Where(x => parentProduct.childrenProductsIds.Contains(x.productId))
                 .ToListAsync();
 
                 return things;
@@ -118,7 +117,64 @@ namespace recipeservice.Services
             }
             return false;
         }
+        private IQueryable<Product> ApplyFilter(IQueryable<Product> queryProducts,
+        ProductFields fieldFilter, string fieldValue)
+        {
+            switch (fieldFilter)
+            {
+                case ProductFields.productCode:
+                    queryProducts = queryProducts.Where(x => x.productCode.Contains(fieldValue));
+                    break;
+                case ProductFields.productDescription:
+                    queryProducts = queryProducts.Where(x => x.productDescription.Contains(fieldValue));
+                    break;
+                case ProductFields.productGTIN:
+                    queryProducts = queryProducts.Where(x => x.productGTIN.Contains(fieldValue));
+                    break;
+                case ProductFields.productName:
+                    queryProducts = queryProducts.Where(x => x.productName.Contains(fieldValue));
+                    break;
+                default:
+                    break;
+            }
+            return queryProducts;
+        }
 
+        private IQueryable<Product> ApplyOrder(IQueryable<Product> queryProducts,
+        ProductFields orderField, OrderEnum order)
+        {
+            switch (orderField)
+            {
+                case ProductFields.productCode:
+                    if (order == OrderEnum.Ascending)
+                        queryProducts = queryProducts.OrderBy(x => x.productCode);
+                    else
+                        queryProducts = queryProducts.OrderByDescending(x => x.productCode);
+                    break;
+                case ProductFields.productDescription:
+                    if (order == OrderEnum.Ascending)
+                        queryProducts = queryProducts.OrderBy(x => x.productDescription);
+                    else
+                        queryProducts = queryProducts.OrderByDescending(x => x.productDescription);
+                    break;
+                case ProductFields.productGTIN:
+                    if (order == OrderEnum.Ascending)
+                        queryProducts = queryProducts.OrderBy(x => x.productGTIN);
+                    else
+                        queryProducts = queryProducts.OrderByDescending(x => x.productGTIN);
+                    break;
+                case ProductFields.productName:
+                    if (order == OrderEnum.Ascending)
+                        queryProducts = queryProducts.OrderBy(x => x.productName);
+                    else
+                        queryProducts = queryProducts.OrderByDescending(x => x.productName);
+                    break;
+                default:
+                    queryProducts = queryProducts.OrderBy(x => x.productId);
+                    break;
+            }
+            return queryProducts;
+        }
 
     }
 }

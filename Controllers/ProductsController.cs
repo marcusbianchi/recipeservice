@@ -22,11 +22,22 @@ namespace recipeservice.Controllers
 
         [HttpGet]
         [ResponseCache(CacheProfileName = "recipecache")]
-        public async Task<IActionResult> Get([FromQuery]int startat, [FromQuery]int quantity)
+        public async Task<IActionResult> Get([FromQuery]int startat, [FromQuery]int quantity,
+            [FromQuery]string fieldFilter, [FromQuery]string fieldValue,
+            [FromQuery]string orderField, [FromQuery]string order)
         {
+            var fieldFilterEnum = ProductFields.Default;
+            Enum.TryParse(fieldFilter, true, out fieldFilterEnum);
+            var orderFieldEnum = ProductFields.Default;
+            Enum.TryParse(orderField, true, out orderFieldEnum);
+            var orderEnumValue = OrderEnum.Ascending;
+            Enum.TryParse(order, true, out orderEnumValue);
+            if (quantity == 0)
+                quantity = 10;
+            var (products, total) = await _productService.getProducts(startat, quantity
+            , fieldFilterEnum, fieldValue, orderFieldEnum, orderEnumValue);
 
-            var products = await _productService.getProducts(startat, quantity);
-            return Ok(products);
+            return Ok(new { values = products, total = total });
         }
 
         [HttpGet("list/")]
