@@ -55,7 +55,7 @@ namespace recipeservice.Services
             queryProducts = ApplyOrder(queryProducts, orderField, order);
             var products = await queryProducts.Include(x => x.additionalInformation)
             .Skip(startat).Take(quantity).ToListAsync();
-            var totalCount = await _context.Products.CountAsync();
+            var totalCount = await _context.Products.Where(x => x.enabled == true).CountAsync();
             return (products, totalCount);
         }
 
