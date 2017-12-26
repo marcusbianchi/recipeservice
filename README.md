@@ -166,7 +166,7 @@ These are the fields of the phase and it's constrains:
 * api/phases/parameters/{phaseid}
   * Get: Return All the parameters with phaseId = phaseId
   * Post: Add the parameters parameter on phaseId = phaseId
-    * Body: Product JSON
+    * Body: Parameter Phase JSON
   * Delete: Delete the parameter from the parameter list
 
 # GatewayAPI
@@ -179,7 +179,7 @@ from other APIs
 * gateway/thinggroups/{optional=startat}{optional=quantity}
 
   * Get: Return List of Groups of Things
-    * startat: represent where the list starts t the database (Default=0)
+    * startat: represent where the list starts at the database (Default=0)
     * quantity: number of resuls in the query (Default=50)
 
 * gateway/thinggroups/{id}
@@ -209,13 +209,6 @@ from other APIs
   * Get: Return List of Products
     * startat: represent where the list starts t the database (Default=0)
     * quantity: number of resuls in the query (Default=50)
-
-* gateway/products/{id}
-
-  * Get: Return Products with productId = ID
-
-* gateway/products/childrenproducts/{productid}
-  * Get: List of Products inside the product where productId = ID
 
 # RecipeAPI
 
@@ -287,7 +280,7 @@ These are the fields of the phase product and it's constrains:
 
   * Get: Return the Product with recipeId = phaseId
   * Post: Add the Product as the product of the phase
-    * Body: Product JSON
+    * Body: Product Phase JSON
   * Delete: Delete the product from the Phase
 
 * api/phases/phases/{recipeId}
