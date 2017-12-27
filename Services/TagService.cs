@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using recipeservice.Model;
 using recipeservice.Services.Interfaces;
 
@@ -67,7 +68,8 @@ namespace recipeservice.Services
             return (listTags, HttpStatusCode.NotFound);
         }
 
-        public async Task<(List<Tag>, HttpStatusCode)> getParameters(int startat, int quantity)
+        public async Task<(List<Tag>, HttpStatusCode)> getParameters(int startat, int quantity,string fieldFilter,
+        string fieldValue,string orderField, string order)
         {
             List<Tag> returnTag = null;
             client.DefaultRequestHeaders.Accept.Clear();
@@ -78,13 +80,24 @@ namespace recipeservice.Services
                 query["startat"] = startat.ToString();
             if (quantity != 0)
                 query["quantity"] = quantity.ToString();
+            if (!string.IsNullOrEmpty(fieldFilter))
+                query["fieldFilter"] = fieldFilter;
+            if (!string.IsNullOrEmpty(fieldValue))
+                query["fieldValue"] = fieldValue;
+            if (!string.IsNullOrEmpty(orderField))
+                query["orderField"] = orderField;
+            if (!string.IsNullOrEmpty(order))
+                query["order"] = order;
             builder.Query = query.ToString();
             string url = builder.ToString();
             var result = await client.GetAsync(url);
             switch (result.StatusCode)
             {
                 case HttpStatusCode.OK:
-                    returnTag = JsonConvert.DeserializeObject<List<Tag>>(await client.GetStringAsync(url));
+                    string returnJson = (await client.GetStringAsync(url));
+                    var returnTagString = JObject.Parse(returnJson)["values"];
+                    string tags = returnTagString.ToString();
+                    returnTag = JsonConvert.DeserializeObject<List<Tag>>(tags);
                     return (returnTag, HttpStatusCode.OK);
                 case HttpStatusCode.NotFound:
                     return (returnTag, HttpStatusCode.NotFound);

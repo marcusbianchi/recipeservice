@@ -9,7 +9,8 @@ namespace recipeservice.Services.Interfaces
     {
         Task<(Tag, HttpStatusCode)> getParameter(int thingId);
         Task<(List<Tag>, HttpStatusCode)> getParameterList(int[] thingId);
-        Task<(List<Tag>, HttpStatusCode)> getParameters(int startat, int quantity);
+        Task<(List<Tag>, HttpStatusCode)> getParameters(int startat, int quantity,string fieldFilter,
+        string fieldValue,string orderField, string order);
 
 
     }
