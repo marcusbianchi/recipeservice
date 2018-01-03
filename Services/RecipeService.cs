@@ -25,13 +25,25 @@ namespace recipeservice.Services
             _phaseService = phaseService;
         }
 
-        public async Task<List<Recipe>> getRecipes(int startat, int quantity)
+        public async Task<(List<Recipe>, int)> getRecipes(int startat, int quantity, RecipeFields fieldFilter,
+            string fieldValue, RecipeFields orderField, OrderEnum order)
         {
-            var recipesId = await _context.Recipes
-                     .OrderBy(x => x.recipeId)
+            var recipesQuery = _context.Recipes.AsQueryable();
+
+            recipesQuery = ApplyFilter(recipesQuery, fieldFilter, fieldValue);
+            recipesQuery = ApplyOrder(recipesQuery, orderField, order);
+
+            var recipesId = await recipesQuery
                      .Skip(startat).Take(quantity)
                      .Select(x => x.recipeId)
                      .ToListAsync();
+
+            var queryCount = _context.Recipes.AsQueryable();
+            queryCount = ApplyFilter(queryCount, fieldFilter, fieldValue);
+            queryCount = ApplyOrder(queryCount, orderField, order);
+            var totalCount = queryCount.Count();
+
+
             List<Recipe> recipes = new List<Recipe>();
             foreach (var item in recipesId)
             {
@@ -39,8 +51,7 @@ namespace recipeservice.Services
                 if (recipe != null)
                     recipes.Add(recipe);
             }
-
-            return recipes;
+            return (recipes, totalCount);
         }
 
         public async Task<Recipe> getRecipe(int recipeId)
@@ -149,6 +160,45 @@ namespace recipeservice.Services
             return await getRecipe(recipeId);
         }
 
+        private IQueryable<Recipe> ApplyFilter(IQueryable<Recipe> query,
+              RecipeFields fieldFilter, string fieldValue)
+        {
+            switch (fieldFilter)
+            {
+                case RecipeFields.recipeCode:
+                    query = query.Where(x => x.recipeCode.Contains(fieldValue));
+                    break;
+                case RecipeFields.recipeName:
+                    query = query.Where(x => x.recipeName.Contains(fieldValue));
+                    break;
+                default:
+                    break;
+            }
+            return query;
+        }
 
+        private IQueryable<Recipe> ApplyOrder(IQueryable<Recipe> query,
+        RecipeFields orderField, OrderEnum order)
+        {
+            switch (orderField)
+            {
+                case RecipeFields.recipeCode:
+                    if (order == OrderEnum.Ascending)
+                        query = query.OrderBy(x => x.recipeCode);
+                    else
+                        query = query.OrderByDescending(x => x.recipeCode);
+                    break;
+                case RecipeFields.recipeName:
+                    if (order == OrderEnum.Ascending)
+                        query = query.OrderBy(x => x.recipeName);
+                    else
+                        query = query.OrderByDescending(x => x.recipeName);
+                    break;
+                default:
+                    query = query.OrderBy(x => x.recipeId);
+                    break;
+            }
+            return query;
+        }
     }
 }

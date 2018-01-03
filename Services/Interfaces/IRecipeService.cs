@@ -6,12 +6,19 @@ namespace recipeservice.Services.Interfaces
 {
     public interface IRecipeService
     {
-        Task<List<Recipe>> getRecipes(int startat, int quantity);
+        Task<(List<Recipe>, int)> getRecipes(int startat, int quantity, RecipeFields fieldFilter,
+            string fieldValue, RecipeFields orderField, OrderEnum order);
         Task<Recipe> getRecipe(int recipeId);
         Task<Recipe> addRecipe(Recipe recipe);
         Task<Recipe> updateRecipe(int recipeId, Recipe recipe);
         Task<Recipe> deleteRecipe(int recipeId);
         Task<PhaseProduct> addProductToRecipe(int recipeId, PhaseProduct phaseProduct);
         Task<Recipe> removeProductToRecipe(int recipeId, PhaseProduct phaseProduct);
+    }
+    public enum RecipeFields
+    {
+        Default,
+        recipeName,
+        recipeCode
     }
 }
