@@ -40,10 +40,12 @@ namespace recipeservice.Controllers
 
         [HttpGet("gateway/thinggroups/")]
         [Produces("application/json")]
-        public async Task<IActionResult> GetGroups([FromQuery]int startat, [FromQuery]int quantity)
+        public async Task<IActionResult> GetGroups([FromQuery]int startat, [FromQuery]int quantity, [FromQuery]string fieldFilter,
+        [FromQuery]string fieldValue, [FromQuery]string orderField, [FromQuery] string order)
         {
 
-            var (thingGroups, resultCode) = await _thingGroupService.getGroups(startat, quantity);
+            var (thingGroups, resultCode) = await _thingGroupService.getGroups(startat, quantity, fieldFilter,
+        fieldValue, orderField, order);
             switch (resultCode)
             {
                 case HttpStatusCode.OK:
@@ -115,12 +117,12 @@ namespace recipeservice.Controllers
         }
         [HttpGet("gateway/tags/")]
         [Produces("application/json")]
-        public async Task<IActionResult> GetParameters([FromQuery]int startat, [FromQuery]int quantity,[FromQuery]string fieldFilter,
-        [FromQuery]string fieldValue,[FromQuery]string orderField,[FromQuery] string order)
+        public async Task<IActionResult> GetParameters([FromQuery]int startat, [FromQuery]int quantity, [FromQuery]string fieldFilter,
+        [FromQuery]string fieldValue, [FromQuery]string orderField, [FromQuery] string order)
         {
 
-            var (tags, resultCode) = await _tagsService.getParameters(startat, quantity,fieldFilter,
-        fieldValue,orderField,order);
+            var (tags, resultCode) = await _tagsService.getParameters(startat, quantity, fieldFilter,
+        fieldValue, orderField, order);
             switch (resultCode)
             {
                 case HttpStatusCode.OK:
