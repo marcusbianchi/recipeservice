@@ -62,17 +62,30 @@ namespace recipeservice.Services
             return (returnGroup, HttpStatusCode.NotFound);
         }
 
-        public async Task<(List<ThingGroup>, HttpStatusCode)> getGroups(int startat, int quantity)
+        public async Task<(List<ThingGroup>, HttpStatusCode)> getGroups(int startat, int quantity,
+            string fieldFilter, string fieldValue, string orderField, string order)
         {
             List<ThingGroup> returnGroups = null;
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             var builder = new UriBuilder(_configuration["thingServiceEndpoint"] + "/api/thinggroups");
             var query = HttpUtility.ParseQueryString(builder.Query);
+
             if (startat != 0)
                 query["startat"] = startat.ToString();
             if (quantity != 0)
                 query["quantity"] = quantity.ToString();
+
+            if (fieldFilter != null)
+                query["fieldFilter"] = fieldFilter.ToString();
+            if (fieldValue != null)
+                query["fieldValue"] = fieldValue.ToString();
+
+            if (orderField != null)
+                query["orderField"] = orderField.ToString();
+            if (order != null)
+                query["order"] = order.ToString();
+
             builder.Query = query.ToString();
             string url = builder.ToString();
             var result = await client.GetAsync(url);
