@@ -14,13 +14,7 @@ namespace recipeservice.Model
         [Required]
         [MaxLength(50)]
         public string measurementUnit { get; set; }
-        [MaxLength(50)]
-        public string minValue { get; set; }
-        [MaxLength(50)]
-        public string maxValue { get; set; }
         [NotMapped]
         public Tag tag { get; set; }
-
-
     }
 }

@@ -59,12 +59,6 @@ These are the fields of the phase parameter and it's constrains:
 * setupValue: Target value of the parameter for the given Phase.
   * String (Up to 50 chars)
   * Mandatory
-* minValue: Minimum acceptable value for the Parameter.
-  * String (Up to 50 chars)
-  * Mandatory
-* maxValue: Minimum acceptable value for the Parameter.
-  * String (Up to 50 chars)
-  * Optional
 * measurementUnit:Unit of measurement of the given product
   * String (Up to 50 chars)
   * Mandatory
@@ -80,8 +74,6 @@ These are the fields of the phase parameter and it's constrains:
   "tagId": 1,
   "setupValue": "50",
   "measurementUnit": "kg",
-  "minValue": "12",
-  "maxValue": "13",
   "tag": {
     "tagId": 1,
     "tagName": "da",
