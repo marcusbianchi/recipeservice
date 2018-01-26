@@ -14,6 +14,7 @@ using recipeservice.Data;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace recipeservice
 {
@@ -67,6 +68,9 @@ namespace recipeservice
         {
             app.UseResponseCaching();
             app.UseCors("CorsPolicy");
+            app.UseForwardedHeaders (new ForwardedHeadersOptions {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
 
             if (env.IsDevelopment())
             {
