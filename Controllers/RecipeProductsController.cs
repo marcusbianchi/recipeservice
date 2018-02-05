@@ -13,47 +13,39 @@ using Newtonsoft.Json;
 using recipeservice.Model;
 using recipeservice.Services.Interfaces;
 
-namespace recipeservice.Controllers
-{
-    [Route("api/recipes/product")]
-    public class RecipeProductsController : Controller
-    {
+namespace recipeservice.Controllers {
+    [Route ("api/recipes/product")]
+    public class RecipeProductsController : Controller {
         private readonly IRecipeService _recipeService;
-        public RecipeProductsController(IRecipeService recipeService)
-        {
+        public RecipeProductsController (IRecipeService recipeService) {
             _recipeService = recipeService;
         }
 
-
-        [HttpPost("{recpieId}")]
-        public async Task<IActionResult> Post(int recpieId, [FromBody]PhaseProduct phaseProduct)
-        {
+        [HttpPost ("{recpieId}")]
+        public async Task<IActionResult> Post (int recpieId, [FromBody] PhaseProduct phaseProduct) {
             phaseProduct.phaseProductId = 0;
-            if (ModelState.IsValid)
-            {
-                var recipe = _recipeService.getRecipe(recpieId);
-                var product = await _recipeService.addProductToRecipe(recpieId, phaseProduct);
+            if (ModelState.IsValid) {
+                var recipe = _recipeService.getRecipe (recpieId);
+                var product = await _recipeService.addProductToRecipe (recpieId, phaseProduct);
                 if (product != null)
-                    return Ok(product);
+                    return Ok (product);
                 else
-                    return NotFound();
+                    return NotFound ();
             }
-            return BadRequest(ModelState);
+            return BadRequest (ModelState);
         }
 
-        [HttpDelete("{recipeId}")]
-        public async Task<IActionResult> Delete(int recipeId, [FromBody]PhaseProduct phaseProduct)
-        {
-            if (ModelState.IsValid)
-            {
-                var recipe = _recipeService.getRecipe(recipeId);
-                var product = await _recipeService.removeProductToRecipe(recipeId, phaseProduct);
+        [HttpDelete ("{recipeId}")]
+        public async Task<IActionResult> Delete (int recipeId, [FromBody] PhaseProduct phaseProduct) {
+            if (ModelState.IsValid) {
+                var recipe = _recipeService.getRecipe (recipeId);
+                var product = await _recipeService.removeProductToRecipe (recipeId, phaseProduct);
                 if (product != null)
-                    return Ok(product);
+                    return Ok (product);
                 else
-                    return NotFound();
+                    return NotFound ();
             }
-            return BadRequest(ModelState);
+            return BadRequest (ModelState);
         }
     }
 }

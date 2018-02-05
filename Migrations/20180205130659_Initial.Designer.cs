@@ -6,20 +6,55 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using recipeservice.Data;
+using recipeservice.Model;
 using System;
 
 namespace recipeservice.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20171117105048_ChangeOnRelationStructure")]
-    partial class ChangeOnRelationStructure
+    [Migration("20180205130659_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
-                .HasAnnotation("ProductVersion", "2.0.0-rtm-26452");
+                .HasAnnotation("ProductVersion", "2.0.1-rtm-125");
+
+            modelBuilder.Entity("recipeservice.Model.AdditionalInformation", b =>
+                {
+                    b.Property<int>("additionalInformationId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Information")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Value")
+                        .HasMaxLength(50);
+
+                    b.Property<int?>("productId");
+
+                    b.HasKey("additionalInformationId");
+
+                    b.HasIndex("productId");
+
+                    b.ToTable("AdditionalInformations");
+                });
+
+            modelBuilder.Entity("recipeservice.Model.ExtraAttibruteType", b =>
+                {
+                    b.Property<int>("extraAttibruteTypeId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("extraAttibruteTypeName")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.HasKey("extraAttibruteTypeId");
+
+                    b.ToTable("ExtraAttibruteTypes");
+                });
 
             modelBuilder.Entity("recipeservice.Model.Phase", b =>
                 {
@@ -47,23 +82,17 @@ namespace recipeservice.Migrations
                     b.Property<int>("phaseParameterId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("maxValue")
-                        .HasMaxLength(50);
-
                     b.Property<string>("measurementUnit")
                         .IsRequired()
                         .HasMaxLength(50);
-
-                    b.Property<string>("minValue")
-                        .HasMaxLength(50);
-
-                    b.Property<int>("parameterId");
 
                     b.Property<int?>("phaseId");
 
                     b.Property<string>("setupValue")
                         .IsRequired()
                         .HasMaxLength(50);
+
+                    b.Property<int>("tagId");
 
                     b.HasKey("phaseParameterId");
 
@@ -83,7 +112,7 @@ namespace recipeservice.Migrations
 
                     b.Property<int?>("phaseId");
 
-                    b.Property<int?>("phaseId1");
+                    b.Property<int>("phaseProductType");
 
                     b.Property<int>("productId");
 
@@ -95,9 +124,36 @@ namespace recipeservice.Migrations
 
                     b.HasIndex("phaseId");
 
-                    b.HasIndex("phaseId1");
-
                     b.ToTable("PhaseProducts");
+                });
+
+            modelBuilder.Entity("recipeservice.Model.Product", b =>
+                {
+                    b.Property<int>("productId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int[]>("childrenProductsIds");
+
+                    b.Property<bool>("enabled");
+
+                    b.Property<int[]>("parentProductsIds");
+
+                    b.Property<string>("productCode")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("productDescription")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("productGTIN")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("productName")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.HasKey("productId");
+
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("recipeservice.Model.Recipe", b =>
@@ -122,6 +178,13 @@ namespace recipeservice.Migrations
                     b.ToTable("Recipes");
                 });
 
+            modelBuilder.Entity("recipeservice.Model.AdditionalInformation", b =>
+                {
+                    b.HasOne("recipeservice.Model.Product")
+                        .WithMany("additionalInformation")
+                        .HasForeignKey("productId");
+                });
+
             modelBuilder.Entity("recipeservice.Model.PhaseParameter", b =>
                 {
                     b.HasOne("recipeservice.Model.Phase")
@@ -132,12 +195,8 @@ namespace recipeservice.Migrations
             modelBuilder.Entity("recipeservice.Model.PhaseProduct", b =>
                 {
                     b.HasOne("recipeservice.Model.Phase")
-                        .WithMany("inputProducts")
+                        .WithMany("phaseProducts")
                         .HasForeignKey("phaseId");
-
-                    b.HasOne("recipeservice.Model.Phase")
-                        .WithMany("outputProducts")
-                        .HasForeignKey("phaseId1");
                 });
 
             modelBuilder.Entity("recipeservice.Model.Recipe", b =>
