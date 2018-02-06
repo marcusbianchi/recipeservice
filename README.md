@@ -13,11 +13,11 @@ These are the fields of the phase product and it's constrains:
 * productId: Original ID of the Product.
   * Integer
   * Mandatory
-* value: Quantity of the given product in the phase.
-  * String (Up to 50 chars)
+* maxValue: Max quantity of the given product in the phase.
+  * Double
   * Mandatory
-* tolerance: Quantity of tolerance
-  * String (Up to 50 chars)
+* minValue:  Minimum quantity of the given product in the phase.
+  * Double
   * Mandatory
 * measurementUnit:Unit of measurement of the given product
   * String (Up to 50 chars)
@@ -36,8 +36,8 @@ These are the fields of the phase product and it's constrains:
 {
   "phaseProductId": 3,
   "productId": 2,
-  "value": "50",
-  "tolerance":"5",
+  "minValue": "10",
+  "maxValue":"15",
   "measurementUnit": "kg",
   "phaseProductType": "finished",
   "product": {
