@@ -56,6 +56,8 @@ namespace recipeservice.Services
            .Where(x => x.phaseProductId == phaseProductId).FirstOrDefaultAsync();
             if (phaseProduct != null)
             {
+                
+
                 _context.Remove(phaseProduct);
                 await _context.SaveChangesAsync();
                 return await _phaseService.getPhase(phaseid);

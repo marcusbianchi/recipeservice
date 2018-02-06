@@ -21,6 +21,7 @@ namespace recipeservice.Model
         public string value { get; set; }
         [Required]
         [MaxLength(50)]
+        public string tolerance { get; set; }
         public string measurementUnit { get; set; }
         [Required]
         [JsonConverter(typeof(StringEnumConverter))]
