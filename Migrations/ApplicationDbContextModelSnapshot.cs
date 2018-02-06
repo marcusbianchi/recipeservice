@@ -105,21 +105,17 @@ namespace recipeservice.Migrations
                     b.Property<int>("phaseProductId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<double>("maxValue");
+
                     b.Property<string>("measurementUnit");
+
+                    b.Property<double>("minValue");
 
                     b.Property<int?>("phaseId");
 
                     b.Property<int>("phaseProductType");
 
                     b.Property<int>("productId");
-
-                    b.Property<string>("tolerance")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<string>("value")
-                        .IsRequired()
-                        .HasMaxLength(50);
 
                     b.HasKey("phaseProductId");
 

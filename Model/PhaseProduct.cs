@@ -17,11 +17,9 @@ namespace recipeservice.Model
         [Required]
         public int productId { get; set; }
         [Required]
-        [MaxLength(50)]
-        public string value { get; set; }
+        public double minValue { get; set; }
         [Required]
-        [MaxLength(50)]
-        public string tolerance { get; set; }
+        public double maxValue { get; set; }
         public string measurementUnit { get; set; }
         [Required]
         [JsonConverter(typeof(StringEnumConverter))]

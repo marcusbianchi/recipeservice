@@ -85,11 +85,12 @@ namespace recipeservice.Migrations
                 {
                     phaseProductId = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                    measurementUnit = table.Column<string>(maxLength: 50, nullable: false),
+                    maxValue = table.Column<double>(nullable: false),
+                    measurementUnit = table.Column<string>(nullable: true),
+                    minValue = table.Column<double>(nullable: false),
                     phaseId = table.Column<int>(nullable: true),
                     phaseProductType = table.Column<int>(nullable: false),
-                    productId = table.Column<int>(nullable: false),
-                    value = table.Column<string>(maxLength: 50, nullable: false)
+                    productId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
