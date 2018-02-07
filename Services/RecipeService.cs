@@ -144,6 +144,7 @@ namespace recipeservice.Services
         {
             var curRecipe = await _context.Recipes
                    .OrderBy(x => x.recipeId)
+                   .Include(x=>x.recipeProduct)
                    .Where(x => x.recipeId == recipeId)
                    .FirstOrDefaultAsync();
             if (curRecipe == null)
