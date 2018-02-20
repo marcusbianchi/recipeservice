@@ -165,6 +165,9 @@ These are the fields of the phase and it's constrains:
     * Body: Parameter Phase JSON
   * Delete: Delete the parameter from the parameter list
 
+* api/phases/parameters/{phaseParameterid}
+  * Put: Update the parameters parameter on phaseParameterid = phaseParameterId
+
 # GatewayAPI
 
 API Responsible to provide access to information nedeed to compose the recipe

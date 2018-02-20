@@ -30,6 +30,19 @@ namespace recipeservice.Controllers
             return Ok(await _phaseParameterService.getParameterFromPhase(phaseId));
         }
 
+        [HttpPut("{phaseParameterId}")]
+        public async Task<IActionResult> Put(int phaseParameterId, [FromBody]PhaseParameter phaseParameter)
+        {
+            if (ModelState.IsValid)
+            {
+                var parameter = await _phaseParameterService.updateParameterToPhase(phaseParameter,phaseParameterId);
+                if (parameter != null)
+                    return Ok(parameter);
+                return NotFound();
+            }
+            return BadRequest(ModelState);
+        }
+
         [HttpPost("{phaseId}")]
         public async Task<IActionResult> Post(int phaseId, [FromBody]PhaseParameter phaseParameter)
         {

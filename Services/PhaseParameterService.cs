@@ -39,8 +39,6 @@ namespace recipeservice.Services
 
         }
 
-
-
         public async Task<PhaseParameter> addParameterToPhase(PhaseParameter phaseParameter, int phaseId)
         {
             var curPhase = await _phaseService.getPhase(phaseId);
@@ -57,6 +55,24 @@ namespace recipeservice.Services
                 return await AddParameter(phaseParameter, curPhase);
             }
             return null;
+        }
+
+
+        public async Task<PhaseParameter> updateParameterToPhase(PhaseParameter phaseParameter, int phaseParameterId)
+        {
+            var phaseParameterDb = await _context.PhaseParameters
+                     .Where(x => x.phaseParameterId == phaseParameterId)
+                     .AsNoTracking()
+                     .FirstOrDefaultAsync();
+
+            if (phaseParameterId != phaseParameterDb.phaseParameterId && phaseParameterDb == null)
+            {
+                return null;
+            }
+
+            _context.PhaseParameters.Update(phaseParameter);
+            await _context.SaveChangesAsync();
+            return phaseParameter;
         }
 
 
