@@ -55,6 +55,16 @@ namespace recipeservice.Controllers
             return Ok(phase);
         }
 
+        [HttpGet("recipeCode/{recipeCode}")]
+        [ResponseCache(CacheProfileName = "recipecache")]
+        public async Task<IActionResult> Get(string recipeCode)
+        {
+            var phase = await _recipeService.getRecipeCode(recipeCode);
+            if (phase == null)
+                return NotFound();
+            return Ok(phase);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]Recipe recipe)
         {

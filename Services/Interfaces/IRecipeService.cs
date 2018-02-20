@@ -9,6 +9,7 @@ namespace recipeservice.Services.Interfaces
         Task<(List<Recipe>, int)> getRecipes(int startat, int quantity, RecipeFields fieldFilter,
             string fieldValue, RecipeFields orderField, OrderEnum order);
         Task<Recipe> getRecipe(int recipeId);
+        Task<Recipe> getRecipeCode(string code);
         Task<Recipe> addRecipe(Recipe recipe);
         Task<Recipe> updateRecipe(int recipeId, Recipe recipe);
         Task<Recipe> deleteRecipe(int recipeId);

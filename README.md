@@ -286,6 +286,10 @@ These are the fields of the phase product and it's constrains:
     * Body: Recipe JSON
   * Delete: Delete the Recipe from the Database with recipeId = ID
 
+* api/recipes/recipecode/{recipecode}
+
+  * Get: Return Phase with recipeCode = recipecode  
+
 * api/phases/product/{recipeId}
 
   * Get: Return the Product with recipeId = phaseId

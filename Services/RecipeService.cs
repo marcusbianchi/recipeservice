@@ -75,6 +75,27 @@ namespace recipeservice.Services
             return recipe;
         }
 
+        public async Task<Recipe> getRecipeCode(string code)
+        {
+            var recipe = await _context.Recipes
+                     .OrderBy(x => x.recipeId)
+                     .Include(x => x.recipeProduct)
+                     .Where(x => x.recipeCode == code)
+                     .FirstOrDefaultAsync();
+            if (recipe != null)
+            {
+                if (recipe.recipeProduct != null)
+                {
+                    var product = await _productService.getProduct(recipe.recipeProduct.productId);
+                    if (product != null)
+                    {
+                        recipe.recipeProduct.product = product;
+                    }
+                }
+            }
+            return recipe;
+        }
+
         public async Task<Recipe> addRecipe(Recipe recipe)
         {
             recipe.recipeProduct = null;
