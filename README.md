@@ -77,6 +77,8 @@ These are the fields of the phase parameter and it's constrains:
   "phaseParameterId": 2,
   "tagId": 1,
   "setupValue": "50",
+  "setupValueMax": "60",
+  "setupValueMin": "40",
   "measurementUnit": "kg",
   "tag": {
     "tagId": 1,
