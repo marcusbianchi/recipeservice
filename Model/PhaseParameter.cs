@@ -11,6 +11,10 @@ namespace recipeservice.Model
         [Required]
         [MaxLength(50)]
         public string setupValue { get; set; }
+        [MaxLength(50)]
+        public string setupValueMin { get; set; }
+        [MaxLength(50)]
+        public string setupValueMax { get; set; }
         [Required]
         [MaxLength(50)]
         public string measurementUnit { get; set; }
