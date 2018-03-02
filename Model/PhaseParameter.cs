@@ -10,14 +10,7 @@ namespace recipeservice.Model
         public int tagId { get; set; }
         [Required]
         [MaxLength(50)]
-        public string setupValue { get; set; }
-        [MaxLength(50)]
-        public string setupValueMin { get; set; }
-        [MaxLength(50)]
-        public string setupValueMax { get; set; }
-        [Required]
-        [MaxLength(50)]
-        public string measurementUnit { get; set; }
+        public string setupValue { get; set; }       
         [NotMapped]
         public Tag tag { get; set; }
     }
