@@ -19,9 +19,11 @@ namespace recipeservice.Controllers
     public class RecipesController : Controller
     {
         private readonly IRecipeService _recipeService;
-        public RecipesController(IRecipeService recipeService)
+        private readonly IRecipeAutomaticService _recipeAutomaticService;
+        public RecipesController(IRecipeService recipeService,IRecipeAutomaticService recipeAutomaticService)
         {
             _recipeService = recipeService;
+            _recipeAutomaticService = recipeAutomaticService;
         }
 
 
@@ -72,7 +74,24 @@ namespace recipeservice.Controllers
             if (ModelState.IsValid)
             {
                 recipe = await _recipeService.addRecipe(recipe);
-                return Created($"api/phases/{recipe.recipeId}", recipe);
+
+                if(recipe != null)
+                {
+                    var (returnAutomatic, stringErro) = await _recipeAutomaticService.CreateAutomaticRecipe(recipe);
+
+                    if(!returnAutomatic)
+                    {
+                        await _recipeService.deleteRecipe(recipe.recipeId);
+                        Console.WriteLine("Erro in automatic create recipe - " + stringErro);
+                        return StatusCode(500, stringErro);
+                    }
+                    
+                    return Created($"api/phases/{recipe.recipeId}", recipe);
+                }
+
+                Console.WriteLine("Erro create recipe ");
+                return StatusCode(500,"Erro create recipe ");
+
             }
             return BadRequest(ModelState);
         }

@@ -49,6 +49,7 @@ namespace recipeservice
             services.AddTransient<IPhaseProductService, PhaseProductService>();
             services.AddTransient<IRecipeService, RecipeService>();
             services.AddTransient<IRecipePhaseService, RecipePhaseService>();
+            services.AddTransient<IRecipeAutomaticService,RecipeAutomaticService>();
             services.AddResponseCaching();
             services.AddMvc((options) =>
             {
