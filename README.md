@@ -302,7 +302,7 @@ These are the fields of the phase product and it's constrains:
     * Body: Product Phase JSON
   * Delete: Delete the product from the Phase
 
-* api/phases/phases/{recipeId}
+* api/recipe/phases/{recipeId}
   * Get: Return All the Phases with recipeId = recipeId
   * Post: Add the Phase on recipeId = recipeId
     * Body: Phase JSON
