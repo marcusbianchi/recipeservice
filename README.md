@@ -1,7 +1,7 @@
 # PhaseAPI
 
 API to Manage Phases on Lorien. Used to create, update, read and delete Phases.
-Also responsible for managing its products and Parameters
+Also responsible for managing its products and Parameters. Default Port: 5002.
 
 ## Phase Product Data Format
 
