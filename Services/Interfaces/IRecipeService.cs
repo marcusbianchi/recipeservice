@@ -20,6 +20,7 @@ namespace recipeservice.Services.Interfaces
     {
         Default,
         recipeName,
-        recipeCode
+        recipeCode,
+        recipeTypeId,
     }
 }

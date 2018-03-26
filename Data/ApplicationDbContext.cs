@@ -11,6 +11,7 @@ namespace recipeservice.Data {
         public DbSet<Product> Products { get; set; }
         public DbSet<ExtraAttibruteType> ExtraAttibruteTypes { get; set; }
         public DbSet<AdditionalInformation> AdditionalInformations { get; set; }
+        public DbSet<RecipeType> RecipeTypes { get; set; }
 
         public ApplicationDbContext (DbContextOptions<ApplicationDbContext> options) : base (options) {
 

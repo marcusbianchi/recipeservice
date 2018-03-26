@@ -240,6 +240,12 @@ These are the fields of the phase product and it's constrains:
 * phasesId: ID of the phases used in this recipe
   * Array Integer
   * Ignored on Create, mandatory on the other methods
+* recipeTypeId: ID of the Type of Recipe
+  * Integer
+  * Mandatory
+* typeDescription: Description of the Type of Recipe
+  * String (Up to 50 chars)
+  * Ignored on Create and Update on the other methods
 
 ### JSON Example:
 
@@ -261,7 +267,9 @@ These are the fields of the phase product and it's constrains:
       "childrenProductsIds": []
     }
   },
-  "phasesId": []
+  "phasesId": [],
+  "recipeTypeId": 2,
+  "typeDescription": "Liga"
 }
 ```
 
@@ -441,3 +449,47 @@ These are the fields of the thing and it's constrains:
     extraAttibruteTypeId = ID
     * Body: Extra Attibute Types JSON
   * Delete: Disable Extra Attibute Types with extraAttibruteTypeId = ID
+
+
+# RecipeTypesAPI
+
+API to Manage Recipe Types that can be added on Lorien's products. Used
+to create, update, read and delete Recipe Types.
+
+## Recipe Type Data Format
+
+These are the fields of the thing and it's constrains:
+
+* recipeTypeId: Id of the Recipe Types Types given by de Database.
+  * Integer
+  * Ignored on Create, mandatory on the other methods
+* typeDescription: Name of the Recipe Types given by the user.
+  * String (Up to 50 chars)
+  * Mandatory
+* typeScope: Name of the Recipe Types scope given by the user.
+  * String (Up to 50 chars)
+  * Mandatory
+
+### JSON Example:
+
+```json
+{
+  "recipeTypeId": 2,
+  "typeDescription": "Liga",
+  "typeScope": "OP-Liga"
+}
+```
+
+## URLs
+
+* api/recipetypes/
+
+  * Get: Return List of Recipe Types
+  * Post: Create the Recipe Types with the JSON in the body
+    * Body: Recipe Types JSON
+
+* api/recipetypes/{id}
+  * Get: Return Recipe Types with recipeTypeId = ID
+  * Put: Update the Recipe Types with the JSON in the body with  recipeTypeId = ID
+    * Body: Recipe Types JSON
+  * Delete: Disable Recipe Types  with recipeTypeId = ID

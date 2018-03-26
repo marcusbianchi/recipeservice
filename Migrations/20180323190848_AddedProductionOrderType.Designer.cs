@@ -12,9 +12,10 @@ using System;
 namespace recipeservice.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180323190848_AddedProductionOrderType")]
+    partial class AddedProductionOrderType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -156,6 +157,9 @@ namespace recipeservice.Migrations
 
                     b.Property<int[]>("phasesId");
 
+                    b.Property<int?>("productionOrderTypeId")
+                        .IsRequired();
+
                     b.Property<string>("recipeCode")
                         .HasMaxLength(50);
 
@@ -166,9 +170,6 @@ namespace recipeservice.Migrations
                         .HasMaxLength(50);
 
                     b.Property<int?>("recipeProductphaseProductId");
-
-                    b.Property<int?>("recipeTypeId")
-                        .IsRequired();
 
                     b.HasKey("recipeId");
 
