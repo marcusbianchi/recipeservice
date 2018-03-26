@@ -44,9 +44,11 @@ namespace recipeservice.Services {
             List<Recipe> recipes = new List<Recipe> ();
             foreach (var item in recipesId) {
                 var recipe = await getRecipe (item);
-                var recipeType = await _recipeTypeService.getRecipeType (recipe.recipeId);
-                if (recipeType != null)
-                    recipe.typeDescription = recipeType.typeDescription;
+                if (recipe.recipeTypeId != null) {
+                    var recipeType = await _recipeTypeService.getRecipeType (recipe.recipeTypeId.Value);
+                    if (recipeType != null)
+                        recipe.typeDescription = recipeType.typeDescription;
+                }
                 if (recipe != null)
                     recipes.Add (recipe);
             }
@@ -69,9 +71,11 @@ namespace recipeservice.Services {
             }
             if (recipe == null)
                 return null;
-            var recipeType = await _recipeTypeService.getRecipeType (recipe.recipeId);
-            if (recipeType != null)
-                recipe.typeDescription = recipeType.typeDescription;
+            if (recipe.recipeTypeId != null) {
+                var recipeType = await _recipeTypeService.getRecipeType (recipe.recipeTypeId.Value);
+                if (recipeType != null)
+                    recipe.typeDescription = recipeType.typeDescription;
+            }
             return recipe;
         }
 
@@ -176,7 +180,7 @@ namespace recipeservice.Services {
                     query = query.Where (x => x.recipeName.Contains (fieldValue));
                     break;
                 case RecipeFields.recipeTypeId:
-                    query = query.Where (x => x.recipeTypeId==Convert.ToInt32(fieldValue));
+                    query = query.Where (x => x.recipeTypeId == Convert.ToInt32 (fieldValue));
                     break;
                 default:
                     break;
