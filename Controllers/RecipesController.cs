@@ -60,7 +60,7 @@ namespace recipeservice.Controllers
             if (quantity == 0)
                 quantity = 50;
             var (recipes, total) = await _recipeService.getRecipes(startat, quantity,
-                   fields, orderFieldEnum, orderEnumValue);
+                   filters, orderFieldEnum, orderEnumValue);
 
             return Ok(new { values = recipes, total = total });
         }
