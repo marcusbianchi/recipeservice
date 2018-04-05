@@ -25,11 +25,22 @@ namespace recipeservice.Services {
             _recipeTypeService = recipeTypeService;
         }
 
-        public async Task<(List<Recipe>, int)> getRecipes (int startat, int quantity, RecipeFields fieldFilter,
-            string fieldValue, RecipeFields orderField, OrderEnum order) {
+        public async Task<(List<Recipe>, int)> getRecipes (int startat, int quantity, List<string> fields,
+            RecipeFields orderField, OrderEnum order) {
             var recipesQuery = _context.Recipes.AsQueryable ();
 
-            recipesQuery = ApplyFilter (recipesQuery, fieldFilter, fieldValue);
+            foreach (var field in fields)
+            {
+                string fieldValue = string.Empty;
+                var fieldSplit = field.Split(",");
+                if(fieldSplit.Count()>1)
+                    fieldValue = fieldSplit[1];
+
+                var fieldFilterEnum = RecipeFields.Default;
+                Enum.TryParse(fieldSplit[0], true, out fieldFilterEnum);
+                recipesQuery = ApplyFilter(recipesQuery, fieldFilterEnum, fieldValue);
+            }
+
             recipesQuery = ApplyOrder (recipesQuery, orderField, order);
 
             var recipesId = await recipesQuery
@@ -38,7 +49,17 @@ namespace recipeservice.Services {
                 .ToListAsync ();
 
             var queryCount = _context.Recipes.AsQueryable ();
-            queryCount = ApplyFilter (queryCount, fieldFilter, fieldValue);
+            foreach (var field in fields)
+            {
+                string fieldValue = string.Empty;
+                var fieldSplit = field.Split(",");
+                if(fieldSplit.Count()>1)
+                    fieldValue = fieldSplit[1];
+
+                var fieldFilterEnum = RecipeFields.Default;
+                Enum.TryParse(fieldSplit[0], true, out fieldFilterEnum);
+                queryCount = ApplyFilter(queryCount, fieldFilterEnum, fieldValue);
+            }
             queryCount = ApplyOrder (queryCount, orderField, order);
             var totalCount = queryCount.Count ();
 

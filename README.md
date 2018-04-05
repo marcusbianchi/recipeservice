@@ -289,6 +289,20 @@ These are the fields of the phase product and it's constrains:
       recipeName,recipeCode)(Default=null)
     * fieldValue: represents de valued searched on the field (Default=null)
 
+* api/recipes/v?{optional=startat}{optional=quantity}{optional=orderField}{optional=order}{optional=filters}
+
+  * Get: Return List of Recipes
+
+    * startat: represent where the list starts t the database (Default=0)
+    * quantity: number of resuls in the query (Default=50)
+    * orderField: Field in which the list will be order by (Possible Values:
+      recipeName,recipeCode)(Default=RecipeId)
+    * order: Represent the order of the listing (Possible Values: ascending,
+      descending)(Default=Ascending)
+    * filters: List represents the field that will be seached (Possible Values:
+      productionOrderNumber,currentstatus) (Default=null) and (virgule) and represents de valued searched on the field (Default=null)
+      Ex: api/recipes/v2?filters=recipeName,ACO&filters=recipeTypeId,1
+
   * Post: Create the Recipe with the JSON in the body
     * Recipe: Phase JSON
 
