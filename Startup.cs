@@ -36,7 +36,7 @@ namespace recipeservice {
             services.AddSingleton<IThingGroupService, ThingGroupService> ();
             services.AddSingleton<ITagsService, TagService> ();
             services.AddDbContext<ApplicationDbContext> (options =>
-                options.UseNpgsql (Configuration.GetConnectionString ("RecipeDb")),ServiceLifetime.Transient);
+                options.UseNpgsql (Configuration.GetConnectionString ("RecipeDb")));
             services.AddTransient<IProductService, ProductService> ();
             services.AddTransient<IExtraAttributeTypeService, ExtraAttributeTypeService> ();
             services.AddTransient<IPhaseService, PhaseService> ();
