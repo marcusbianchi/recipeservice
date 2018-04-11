@@ -35,6 +35,7 @@ namespace recipeservice.Controllers
         {
               List<string> fields = new List<string>();
             fields.Add(fieldFilter +","+ fieldValue);          
+
             var orderFieldEnum = RecipeFields.Default;
             Enum.TryParse(orderField, true, out orderFieldEnum);
             var orderEnumValue = OrderEnum.Ascending;

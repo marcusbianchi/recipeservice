@@ -13,6 +13,7 @@ namespace recipeservice.Services {
         private readonly ApplicationDbContext _context;
         private readonly IProductService _productService;
         private readonly IPhaseService _phaseService;
+
         private readonly IRecipeTypeService _recipeTypeService;
         public RecipeService (ApplicationDbContext context,
             IProductService productService,
@@ -43,13 +44,20 @@ namespace recipeservice.Services {
             List<Recipe> recipes = new List<Recipe> ();
             foreach (var item in recipesId) {
                 var recipe = await getRecipe (item);
-                if (recipe.recipeTypeId != null) {
-                    var recipeType = await _recipeTypeService.getRecipeType (recipe.recipeTypeId.Value);
-                    if (recipeType != null)
-                        recipe.typeDescription = recipeType.typeDescription;
-                }
-                if (recipe != null)
+                if (recipe != null) {
+                    if (recipe.recipeTypeId != null) {
+                        var recipeType = await _recipeTypeService.getRecipeType (recipe.recipeTypeId.Value);
+                        if (recipeType != null)
+                            recipe.typeDescription = recipeType.typeDescription;
+                    }
+                    recipe.phases = new List<Phase> ();
+                    foreach (var phaseId in recipe.phasesId) {
+                        var phase = await _phaseService.getPhase (phaseId);
+                        if (phase != null)
+                            recipe.phases.Add (phase);
+                    }
                     recipes.Add (recipe);
+                }
             }
             return (recipes, totalCount);
         }
@@ -74,6 +82,13 @@ namespace recipeservice.Services {
                 var recipeType = await _recipeTypeService.getRecipeType (recipe.recipeTypeId.Value);
                 if (recipeType != null)
                     recipe.typeDescription = recipeType.typeDescription;
+
+            }
+            recipe.phases = new List<Phase> ();
+            foreach (var phaseId in recipe.phasesId) {
+                var phase = await _phaseService.getPhase (phaseId);
+                if (phase != null)
+                    recipe.phases.Add (phase);
             }
             return recipe;
         }
@@ -191,6 +206,7 @@ namespace recipeservice.Services {
                     break;
                 case RecipeFields.recipeName:
                     query = query.Where (x => x.recipeName.Contains (fieldValue));
+
                     break;
                 case RecipeFields.recipeTypeId:
                     query = query.Where (x => x.recipeTypeId == Convert.ToInt32 (fieldValue));

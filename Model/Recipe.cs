@@ -17,6 +17,9 @@ namespace recipeservice.Model {
         public PhaseProduct recipeProduct { get; set; }
         public int[] phasesId { get; set; }
 
+        [NotMapped]
+        public ICollection<Phase> phases { get; set; }
+
         [Required]
         public int? recipeTypeId { get; set; }
 
