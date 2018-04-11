@@ -25,7 +25,6 @@ namespace recipeservice.Controllers {
         public async Task<IActionResult> Post (int recpieId, [FromBody] PhaseProduct phaseProduct) {
             phaseProduct.phaseProductId = 0;
             if (ModelState.IsValid) {
-                var recipe = _recipeService.getRecipe (recpieId);
                 var product = await _recipeService.addProductToRecipe (recpieId, phaseProduct);
                 if (product != null)
                     return Ok (product);
