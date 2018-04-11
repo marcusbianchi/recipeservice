@@ -33,8 +33,9 @@ namespace recipeservice.Controllers
             [FromQuery]string fieldFilter, [FromQuery]string fieldValue,
             [FromQuery]string orderField, [FromQuery]string order)
         {
-            List<string> fields = new List<string>();
-            fields.Add(fieldFilter +","+ fieldValue);
+              List<string> fields = new List<string>();
+            fields.Add(fieldFilter +","+ fieldValue);          
+
             var orderFieldEnum = RecipeFields.Default;
             Enum.TryParse(orderField, true, out orderFieldEnum);
             var orderEnumValue = OrderEnum.Ascending;
@@ -47,20 +48,20 @@ namespace recipeservice.Controllers
             return Ok(new { values = recipes, total = total });
         }
 
+
         [HttpGet("v2")]
         [ResponseCache(CacheProfileName = "recipecache")]
         public async Task<IActionResult> Get([FromQuery]int startat, [FromQuery]int quantity,
-            [FromQuery]List<string> filters,[FromQuery]string orderField, [FromQuery]string order)
-        {
-            
+            [FromQuery]List<string> filters, [FromQuery]string orderField, [FromQuery]string order)
+        {          
             var orderFieldEnum = RecipeFields.Default;
             Enum.TryParse(orderField, true, out orderFieldEnum);
             var orderEnumValue = OrderEnum.Ascending;
             Enum.TryParse(order, true, out orderEnumValue);
             if (quantity == 0)
                 quantity = 50;
-            var (recipes, total) = await _recipeService.getRecipes(startat, quantity,
-                   filters, orderFieldEnum, orderEnumValue);
+            var (recipes, total) = await _recipeService.getRecipes(startat, quantity
+                    , filters, orderFieldEnum, orderEnumValue);
 
             return Ok(new { values = recipes, total = total });
         }

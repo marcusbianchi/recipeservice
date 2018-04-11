@@ -26,21 +26,9 @@ namespace recipeservice.Services {
         }
 
         public async Task<(List<Recipe>, int)> getRecipes (int startat, int quantity, List<string> fields,
-            RecipeFields orderField, OrderEnum order) {
+         RecipeFields orderField, OrderEnum order) {
             var recipesQuery = _context.Recipes.AsQueryable ();
-
-            foreach (var field in fields)
-            {
-                string fieldValue = string.Empty;
-                var fieldSplit = field.Split(",");
-                if(fieldSplit.Count()>1)
-                    fieldValue = fieldSplit[1];
-
-                var fieldFilterEnum = RecipeFields.Default;
-                Enum.TryParse(fieldSplit[0], true, out fieldFilterEnum);
-                recipesQuery = ApplyFilter(recipesQuery, fieldFilterEnum, fieldValue);
-            }
-
+            recipesQuery = ApplyMultifilter(recipesQuery,fields);
             recipesQuery = ApplyOrder (recipesQuery, orderField, order);
 
             var recipesId = await recipesQuery
@@ -49,17 +37,7 @@ namespace recipeservice.Services {
                 .ToListAsync ();
 
             var queryCount = _context.Recipes.AsQueryable ();
-            foreach (var field in fields)
-            {
-                string fieldValue = string.Empty;
-                var fieldSplit = field.Split(",");
-                if(fieldSplit.Count()>1)
-                    fieldValue = fieldSplit[1];
-
-                var fieldFilterEnum = RecipeFields.Default;
-                Enum.TryParse(fieldSplit[0], true, out fieldFilterEnum);
-                queryCount = ApplyFilter(queryCount, fieldFilterEnum, fieldValue);
-            }
+            queryCount = ApplyMultifilter(recipesQuery,fields);
             queryCount = ApplyOrder (queryCount, orderField, order);
             var totalCount = queryCount.Count ();
 
@@ -204,6 +182,20 @@ namespace recipeservice.Services {
             _context.Recipes.Update (curRecipe);
             await _context.SaveChangesAsync ();
             return await getRecipe (recipeId);
+        }
+
+        private IQueryable<Recipe> ApplyMultifilter (IQueryable<Recipe> query, List<string> fields) {
+            foreach (var field in fields) {
+                string fieldValue = string.Empty;
+                var fieldSplit = field.Split (",");
+                if (fieldSplit.Count () > 1)
+                    fieldValue = fieldSplit[1];
+
+                var fieldFilterEnum = RecipeFields.Default;
+                Enum.TryParse (fieldSplit[0], true, out fieldFilterEnum);
+                query = ApplyFilter (query, fieldFilterEnum, fieldValue);
+            }
+            return query;
         }
 
         private IQueryable<Recipe> ApplyFilter (IQueryable<Recipe> query,

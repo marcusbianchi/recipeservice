@@ -6,8 +6,8 @@ namespace recipeservice.Services.Interfaces
 {
     public interface IRecipeService
     {
-        Task<(List<Recipe>, int)> getRecipes(int startat, int quantity, List<string> fieldFilter,
-            RecipeFields orderField, OrderEnum order);
+        Task<(List<Recipe>, int)> getRecipes(int startat, int quantity,List<string> fields,
+             RecipeFields orderField, OrderEnum order);
         Task<Recipe> getRecipe(int recipeId);
         Task<Recipe> getRecipeCode(string code);
         Task<Recipe> addRecipe(Recipe recipe);
