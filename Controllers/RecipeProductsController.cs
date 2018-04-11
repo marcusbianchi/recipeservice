@@ -37,7 +37,6 @@ namespace recipeservice.Controllers {
         [HttpDelete ("{recipeId}")]
         public async Task<IActionResult> Delete (int recipeId, [FromBody] PhaseProduct phaseProduct) {
             if (ModelState.IsValid) {
-                var recipe = _recipeService.getRecipe (recipeId);
                 var product = await _recipeService.removeProductToRecipe (recipeId, phaseProduct);
                 if (product != null)
                     return Ok (product);
