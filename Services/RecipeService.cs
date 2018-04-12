@@ -97,7 +97,7 @@ namespace recipeservice.Services {
             var recipe = await _context.Recipes
                 .OrderBy (x => x.recipeId)
                 .Include (x => x.recipeProduct)
-                .Where (x => x.recipeCode == code).AsNoTracking()
+                .Where (x => x.recipeCode == code)
                 .FirstOrDefaultAsync ();
             if (recipe != null) {
                 if (recipe.recipeProduct != null) {

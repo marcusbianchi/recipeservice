@@ -30,7 +30,7 @@ namespace recipeservice.Services
             var product = await _context.Products
              .Include(x => x.additionalInformation)
              .OrderBy(x => x.productId)
-             .Where(x => x.productId == ProductId).AsNoTracking()
+             .Where(x => x.productId == ProductId)
              .FirstOrDefaultAsync();
             if (product == null)
                 return null;

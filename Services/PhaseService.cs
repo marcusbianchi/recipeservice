@@ -30,7 +30,7 @@ namespace recipeservice.Services
         {
             Phase phase = await _context.Phases
             .Include(x => x.phaseProducts)
-            .Include(x => x.phaseParameters).AsNoTracking()
+            .Include(x => x.phaseParameters)
             .Where(x => x.phaseId == phaseId).FirstOrDefaultAsync();
             if (phase != null)
             {

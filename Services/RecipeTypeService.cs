@@ -24,7 +24,7 @@ namespace recipeservice.Services {
 
         public async Task<RecipeType> deleteRecipeType (int recipeTypeId) {
             var recipeType = await _context.RecipeTypes
-                .Where (x => x.recipeTypeId == recipeTypeId).AsNoTracking()
+                .Where (x => x.recipeTypeId == recipeTypeId)
                 .FirstOrDefaultAsync ();
             if (recipeType != null) {
                 _context.Entry (recipeType).State = EntityState.Deleted;

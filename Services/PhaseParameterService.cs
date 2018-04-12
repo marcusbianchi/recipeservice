@@ -62,7 +62,6 @@ namespace recipeservice.Services
         {
             var phaseParameterDb = await _context.PhaseParameters
                      .Where(x => x.phaseParameterId == phaseParameterId)
-                     .AsNoTracking()
                      .FirstOrDefaultAsync();
 
             if (phaseParameterId != phaseParameterDb.phaseParameterId && phaseParameterDb == null)

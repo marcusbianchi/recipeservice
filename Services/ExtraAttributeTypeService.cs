@@ -37,7 +37,6 @@ namespace recipeservice.Services
         {
             var extraAttibruteType = await _context.ExtraAttibruteTypes
                                    .Where(x => x.extraAttibruteTypeId == extraAttibruteTypeId)
-                                   .AsNoTracking()
                                    .FirstOrDefaultAsync();
 
             if (extraAttibruteType != null)
