@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using recipeservice.Model;
 using recipeservice.Services.Interfaces;
+using securityfilter;
 
 namespace recipeservice.Controllers {
     [Route ("api/recipes/product")]
@@ -22,6 +23,7 @@ namespace recipeservice.Controllers {
         }
 
         [HttpPost ("{recpieId}")]
+        [SecurityFilter ("recipes__allow_update")]
         public async Task<IActionResult> Post (int recpieId, [FromBody] PhaseProduct phaseProduct) {
             phaseProduct.phaseProductId = 0;
             if (ModelState.IsValid) {
@@ -35,6 +37,7 @@ namespace recipeservice.Controllers {
         }
 
         [HttpDelete ("{recipeId}")]
+        [SecurityFilter ("recipes__allow_update")]
         public async Task<IActionResult> Delete (int recipeId, [FromBody] PhaseProduct phaseProduct) {
             if (ModelState.IsValid) {
                 var product = await _recipeService.removeProductToRecipe (recipeId, phaseProduct);

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using recipeservice.Model;
 using recipeservice.Services.Interfaces;
+using securityfilter;
 
 namespace recipeservice.Controllers {
     [Route ("api/[controller]")]
@@ -21,6 +22,7 @@ namespace recipeservice.Controllers {
         }
 
         [HttpGet]
+        [SecurityFilter ("recipes__allow_read")]
         [ResponseCache (CacheProfileName = "recipecache")]
         public async Task<IActionResult> Get ([FromQuery] int startat, [FromQuery] int quantity) {
             if (quantity == 0)
@@ -30,6 +32,7 @@ namespace recipeservice.Controllers {
         }
 
         [HttpGet ("{id}")]
+        [SecurityFilter ("recipes__allow_read")]
         [ResponseCache (CacheProfileName = "recipecache")]
         public async Task<IActionResult> Get (int id) {
             var recipeType = await _recipeTypeService.getRecipeType (id);
@@ -39,6 +42,7 @@ namespace recipeservice.Controllers {
         }
 
         [HttpPost]
+        [SecurityFilter ("recipes__allow_update")]
         public async Task<IActionResult> Post ([FromBody] RecipeType recipeType) {
             recipeType.recipeTypeId = 0;
             if (ModelState.IsValid) {
@@ -49,6 +53,7 @@ namespace recipeservice.Controllers {
         }
 
         [HttpPut ("{id}")]
+        [SecurityFilter ("recipes__allow_update")]
         public async Task<IActionResult> Put (int id, [FromBody] RecipeType recipeType) {
             if (ModelState.IsValid) {
                 recipeType = await _recipeTypeService.updateRecipeType (id, recipeType);
@@ -61,6 +66,7 @@ namespace recipeservice.Controllers {
         }
 
         [HttpDelete ("{id}")]
+        [SecurityFilter ("recipes__allow_update")]
         public async Task<IActionResult> Delete (int id) {
             if (ModelState.IsValid) {
                 var productionOrderType = await _recipeTypeService.deleteRecipeType (id);

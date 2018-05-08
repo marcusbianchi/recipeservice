@@ -12,47 +12,44 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using recipeservice.Model;
 using recipeservice.Services.Interfaces;
-namespace recipeservice.Controllers
-{
-    [Route("api/recipes/phases/")]
-    public class RecipePhaseController : Controller
-    {
+using securityfilter;
+
+namespace recipeservice.Controllers {
+    [Route ("api/recipes/phases/")]
+    public class RecipePhaseController : Controller {
         private readonly IRecipePhaseService _recipePhaseService;
-        public RecipePhaseController(IRecipePhaseService recipePhaseService)
-        {
+        public RecipePhaseController (IRecipePhaseService recipePhaseService) {
             _recipePhaseService = recipePhaseService;
         }
 
-        [HttpGet("{recipeId}")]
-        public async Task<IActionResult> Get(int recipeId)
-        {
-            return Ok(await _recipePhaseService.getPhasesFromRecipe(recipeId));
+        [HttpGet ("{recipeId}")]
+        [SecurityFilter ("recipes__allow_read")]
+        public async Task<IActionResult> Get (int recipeId) {
+            return Ok (await _recipePhaseService.getPhasesFromRecipe (recipeId));
         }
 
-        [HttpPost("{recipeId}")]
-        public async Task<IActionResult> Post(int recipeId, [FromBody]Phase phase)
-        {
-            if (ModelState.IsValid)
-            {
-                var recipe = await _recipePhaseService.addPhaseToRecipe(phase, recipeId);
+        [HttpPost ("{recipeId}")]
+        [SecurityFilter ("recipes__allow_update")]
+        public async Task<IActionResult> Post (int recipeId, [FromBody] Phase phase) {
+            if (ModelState.IsValid) {
+                var recipe = await _recipePhaseService.addPhaseToRecipe (phase, recipeId);
                 if (recipe != null)
-                    return Ok(recipe);
-                return NotFound();
+                    return Ok (recipe);
+                return NotFound ();
             }
-            return BadRequest(ModelState);
+            return BadRequest (ModelState);
         }
 
-        [HttpDelete("{recipeId}")]
-        public async Task<IActionResult> Delete(int recipeId, [FromBody]Phase phase)
-        {
-            if (ModelState.IsValid)
-            {
-                var recipe = await _recipePhaseService.removePhaseFromRecipe(phase.phaseId, recipeId);
+        [HttpDelete ("{recipeId}")]
+        [SecurityFilter ("recipes__allow_update")]
+        public async Task<IActionResult> Delete (int recipeId, [FromBody] Phase phase) {
+            if (ModelState.IsValid) {
+                var recipe = await _recipePhaseService.removePhaseFromRecipe (phase.phaseId, recipeId);
                 if (recipe != null)
-                    return Ok(recipe);
-                return NotFound();
+                    return Ok (recipe);
+                return NotFound ();
             }
-            return BadRequest(ModelState);
+            return BadRequest (ModelState);
         }
     }
 }
