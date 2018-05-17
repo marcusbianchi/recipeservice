@@ -10,6 +10,8 @@ namespace recipeservice.Model
         scrap,
         finished,
         semi_finished,
+        contaminent,
+        base
     }
     public class PhaseProduct
     {
