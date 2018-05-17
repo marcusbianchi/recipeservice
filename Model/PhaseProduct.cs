@@ -11,7 +11,7 @@ namespace recipeservice.Model
         finished,
         semi_finished,
         contaminent,
-        base
+        base_product        
     }
     public class PhaseProduct
     {
