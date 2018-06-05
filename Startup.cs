@@ -17,6 +17,8 @@ using Newtonsoft.Json;
 using recipeservice.Data;
 using recipeservice.Services;
 using recipeservice.Services.Interfaces;
+using securityfilter.Services;
+using securityfilter.Services.Interfaces;
 
 namespace recipeservice {
     public class Startup {
@@ -32,12 +34,14 @@ namespace recipeservice {
                     .AllowAnyMethod ()
                     .AllowAnyHeader ();
             }));
+            services.AddSingleton<IConfiguration> (Configuration);
+            services.AddTransient<IEncryptService, EncryptService> ();
+            
             if (!String.IsNullOrEmpty (Configuration["KeyFolder"]))
                 services.AddDataProtection ()
                 .SetApplicationName ("Lorien")
                 .PersistKeysToFileSystem (new DirectoryInfo (Configuration["KeyFolder"]));
-                
-            services.AddSingleton<IConfiguration> (Configuration);
+
             services.AddSingleton<IThingService, ThingService> ();
             services.AddSingleton<IThingGroupService, ThingGroupService> ();
             services.AddSingleton<ITagsService, TagService> ();
