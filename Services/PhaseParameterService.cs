@@ -50,13 +50,17 @@ namespace recipeservice.Services {
         public async Task<PhaseParameter> updateParameterToPhase (PhaseParameter phaseParameter, int phaseParameterId) {
             var phaseParameterDb = await _context.PhaseParameters
                 .Where (x => x.phaseParameterId == phaseParameterId)
+                .AsNoTracking()
                 .FirstOrDefaultAsync ();
 
             if (phaseParameterId != phaseParameterDb.phaseParameterId && phaseParameterDb == null) {
                 return null;
             }
+            phaseParameterDb.setupValue = phaseParameter.setupValue;
+            phaseParameterDb.tag = phaseParameter.tag;
+            phaseParameterDb.tagId = phaseParameter.tagId;
 
-            _context.PhaseParameters.Update (phaseParameter);
+            _context.PhaseParameters.Update (phaseParameterDb);
             await _context.SaveChangesAsync ();
             return phaseParameter;
         }
